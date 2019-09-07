@@ -1,12 +1,6 @@
 <template>
 	<view>
-		<view class="uni-list">
-			<view class="uni-list-cell">
-				<view class="uni-list-cell-navigate uni-navigate-right">
-					
-				</view>
-			</view>
-		</view>
+		<view class="icon iconfont icon-changjingguanli" style="color: red; font-size: 60upx;"></view>
 	</view>
 </template>
 
