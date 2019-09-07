@@ -1,8 +1,6 @@
 <template>
 	<view>
-		<view class="icon iconfont icon-changjingguanli animated fadeInDownBig" 
-			  style="color: red; font-size: 100upx;">
-		</view>
+		我的
 	</view>
 </template>
 
