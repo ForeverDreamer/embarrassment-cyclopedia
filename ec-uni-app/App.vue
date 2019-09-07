@@ -20,6 +20,8 @@
 	@import './common/uni.css';
 	/* 引入自定义图标库 */
 	@import './common/icon.css';
+	/* 引入动画库 */
+	@import './common/animate.css';
 	
 	/* #endif*/
 </style>

@@ -1,6 +1,8 @@
 <template>
 	<view>
-		<view class="icon iconfont icon-changjingguanli" style="color: red; font-size: 60upx;"></view>
+		<view class="icon iconfont icon-changjingguanli animated fadeInDownBig" 
+			  style="color: red; font-size: 100upx;">
+		</view>
 	</view>
 </template>
 
