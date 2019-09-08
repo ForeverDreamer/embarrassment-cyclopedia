@@ -18,13 +18,19 @@
             "path" : "pages/home/home",
             "style" : {}
         }
+        ,{
+            "path" : "pages/demo/demo",
+            "style" : {
+				"navigationBarTitleText": "view和text组件"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "仿糗事百科",
 		// 使用#FF0000，不要使用red，微信小程序不能识别
-		"navigationBarBackgroundColor": "#FF0000",
-		"backgroundColor": "#0018FF"
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
 	},
 	// 底部导航
 	"tabBar": {
@@ -33,6 +39,11 @@
 	    "borderStyle": "black",
 	    "backgroundColor": "#FFFFFF",
 	    "list": [{
+	        "pagePath": "pages/demo/demo",
+	        "iconPath": "static/tabbar/home.png",
+	        "selectedIconPath": "static/tabbar/homed.png",
+	        "text": "demo"
+	    }, {
 	        "pagePath": "pages/index/index",
 	        "iconPath": "static/tabbar/index.png",
 	        "selectedIconPath": "static/tabbar/indexed.png",
