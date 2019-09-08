@@ -3,7 +3,41 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				// "navigationBarTitleText": "uni-app"
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"titleNView": {
+						// 搜索框
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F7F7F7",
+							"borderRadius": "4px",
+							"placeholder": "搜索糗事",
+							"placeholderColor": "#CCCCCC",
+							"disabled": true
+						},
+						// 按钮
+						"buttons": [
+							// 左边
+							{
+								"color": "#FF9619",
+								"colorPressed": "#BBBBBB",
+								"float": "left",
+								"fontSize": "22px",
+								"fontSrc":"/static/font/icon.ttf",
+								"text": "\ue606"
+							},
+							// 右边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "22px",
+								"fontSrc":"/static/font/icon.ttf",
+								"text": "\ue60c"
+							}
+						]
+					}
+				}
 			}
 		}
 	    ,{
@@ -17,12 +51,6 @@
         ,{
             "path" : "pages/home/home",
             "style" : {}
-        }
-        ,{
-            "path" : "pages/demo/demo",
-            "style" : {
-				"navigationBarTitleText": "view和text组件"
-			}
         }
     ],
 	"globalStyle": {
@@ -39,11 +67,6 @@
 	    "borderStyle": "black",
 	    "backgroundColor": "#FFFFFF",
 	    "list": [{
-	        "pagePath": "pages/demo/demo",
-	        "iconPath": "static/tabbar/home.png",
-	        "selectedIconPath": "static/tabbar/homed.png",
-	        "text": "demo"
-	    }, {
 	        "pagePath": "pages/index/index",
 	        "iconPath": "static/tabbar/index.png",
 	        "selectedIconPath": "static/tabbar/indexed.png",
