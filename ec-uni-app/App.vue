@@ -22,6 +22,8 @@
 	@import './common/icon.css';
 	/* 引入动画库 */
 	@import './common/animate.css';
+	/* 自定义公共样式 */
+	@import './common/common.css';
 	
 	/* #endif*/
 </style>
