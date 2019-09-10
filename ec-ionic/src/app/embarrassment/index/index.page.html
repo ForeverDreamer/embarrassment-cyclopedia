@@ -1,27 +1,56 @@
 <ion-header>
   <ion-toolbar>
     <ion-grid>
-      <ion-row nowrap align-items-center justify-content-around>
-        <ion-col>
-          <ion-button fill="clear" size="small" shape="round">
-            <ion-icon slot="icon-only" src="../../assets/icon/sign.svg"></ion-icon>
-          </ion-button>
+      <ion-row nowrap align-items-center justify-content-around padding>
+        <ion-col class="flex_layout_left">
+          <div>
+            <ion-icon slot="start" src="../../assets/icon/sign.svg" class="search-icon"></ion-icon>
+          </div>
         </ion-col>
-        <ion-col size="8">
-          <ion-searchbar placeholder="搜索糗事"></ion-searchbar>
+        <ion-col size="10">
+          <ion-searchbar placeholder="搜索糗事" class="search-icon"></ion-searchbar>
         </ion-col>
-        <ion-col>
-          <ion-button fill="clear" size="small" shape="round">
-            <ion-icon slot="icon-only" src="../../assets/icon/edit.svg"></ion-icon>
-          </ion-button>
+        <ion-col class="flex_layout_right">
+          <div>
+            <ion-icon slot="end" src="../../assets/icon/edit.svg" class="search-icon"></ion-icon>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
-
-
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content no-padding>
+  <ion-grid>
+    <ion-row nowrap align-items-center class="ion-justify-content-between">
+      <ion-col size="4" class="ion-no-margin ion-padding-vertical flex_layout_left">
+        <div class="flex_layout_base">
+          <img src="../../../assets/image/userpic/12.jpg" class="head_img"><ion-label>昵称</ion-label>
+        </div>
+      </ion-col>
+      <ion-col size="3" class="ion-no-margin ion-padding-vertical flex_layout_right">
+        <div class="flex_layout_base">
+          <ion-icon slot="icon-only" src="../../assets/icon/guanzhu.svg" class="guanzhu"></ion-icon>
+          <ion-label>关注</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row nowrap align-items-center>
+      <ion-col>
+        <ion-label>我是标题</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row nowrap align-items-center>
+      <ion-col>
+        <img src="../../../assets/image/datapic/11.jpg"/>
+        <img src="../../../assets/image/datapic/play.png" class="index-list-play">
+        <ion-label class="index-list-playinfo">20w次播放 2:47</ion-label>
+        <div>
 
+        </div>
+
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
