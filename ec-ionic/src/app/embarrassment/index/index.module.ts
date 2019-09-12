@@ -6,6 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { IndexPage } from './index.page';
+import { IndexItem } from '../components/index-item/index-item.model';
+import {IndexItemComponent} from '../components/index-item/index-item.component';
+
 
 const routes: Routes = [
   {
@@ -21,6 +24,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [IndexPage]
+  declarations: [IndexPage, IndexItemComponent]
 })
 export class IndexPageModule {}

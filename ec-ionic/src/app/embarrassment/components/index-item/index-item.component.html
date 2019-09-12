@@ -1,0 +1,68 @@
+<div>
+  <!-- 头像昵称 -->
+  <div class="flex_layout_base">
+    <div class="flex_layout_left">
+      <img [src]="item.userPic" class="head_img"/><ion-label>{{item.userName}}</ion-label>
+    </div>
+    <div class="flex_layout_right" *ngIf="!item.isGuanzhu">
+      <ion-icon slot="icon-only" src="../../assets/icon/guanzhu.svg" class="guanzhu"></ion-icon>
+      <ion-label>关注</ion-label>
+    </div>
+  </div>
+  <!-- 标题 -->
+  <div class="item-inner-margin title-font">
+    <ion-label>{{item.title}}</ion-label>
+  </div>
+  <!-- 封面图片 -->
+  <div class="item-inner-margin video-div" *ngIf="item.type==='video'; else imgBlock">
+    <ion-img [src]="item.titlePic"></ion-img>
+    <img src="../../../assets/image/datapic/play.png" class="index-list-play">
+    <ion-label class="index-list-playinfo">{{item.playNum}}w次播放 {{item.long}}</ion-label>
+  </div>
+  <ng-template #imgBlock><ion-img [src]="item.titlePic" class="item-inner-margin"></ion-img></ng-template>
+  <!-- 用户评论 -->
+  <div class="flex_layout_base user-feedback">
+    <div class="flex_layout_left">
+      <div class="flex_layout_base user-feedback-item" *ngIf="item.infoNum.index===1; else dingBlock">
+<!--        <ion-icon slot="icon-only" src="../../assets/icon/smile.svg" [ngClass]="{true:'user-feedback-active',false:'user-feedback-item'}[item.infoNum.index]"></ion-icon>-->
+        <ion-icon slot="icon-only" src="../../assets/icon/smiling.svg" class="user-feedback-active"></ion-icon>
+        <ion-label class="user-feedback-active">{{item.infoNum.dingNum}}</ion-label>
+      </div>
+      <ng-template #dingBlock>
+        <div class="flex_layout_base user-feedback-item">
+          <div class="flex_layout_left">
+            <ion-icon slot="icon-only" src="../../assets/icon/smile.svg" class="user-feedback-item"></ion-icon>
+            <ion-label>{{item.infoNum.dingNum}}</ion-label>
+          </div>
+        </div>
+      </ng-template>
+      <div class="flex_layout_base user-feedback-item" *ngIf="item.infoNum.index===2; else caiBlock">
+        <div>
+          <ion-icon slot="icon-only" src="../../assets/icon/cring.svg" class="user-feedback-active"></ion-icon>
+          <ion-label class="user-feedback-active">{{item.infoNum.caiNum}}</ion-label>
+        </div>
+      </div>
+      <ng-template #caiBlock>
+        <div class="flex_layout_base user-feedback-item">
+          <div class="flex_layout_left">
+            <ion-icon slot="icon-only" src="../../assets/icon/cry.svg" class="user-feedback-item"></ion-icon>
+            <ion-label>{{item.infoNum.caiNum}}</ion-label>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <div class="flex_layout_right user-feedback">
+      <div class="flex_layout_base user-feedback-item">
+        <ion-icon slot="icon-only" src="../../assets/icon/comment.svg" class="user-feedback-item"></ion-icon>
+        <ion-label>{{item.commentNum}}</ion-label>
+      </div>
+      <div class="flex_layout_base">
+        <ion-icon slot="icon-only" src="../../assets/icon/share.svg" class="user-feedback-item"></ion-icon>
+        <ion-label>{{item.shareNum}}</ion-label>
+      </div>
+    </div>
+  </div>
+  <div class="hr"><hr/></div>
+
+
+</div>

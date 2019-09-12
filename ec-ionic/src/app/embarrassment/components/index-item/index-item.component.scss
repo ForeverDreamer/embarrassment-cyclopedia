@@ -1,0 +1,82 @@
+.head_img {
+  width: 13vw;
+  height: 13vw;
+  margin-right: 1vw;
+  border-radius: 100%;
+}
+
+.guanzhu {
+  font-size: 3vw;
+  margin-right: 1vw;
+}
+
+.flex_layout_base, .flex_layout_left, .flex_layout_right {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  font-size: 4vw;
+}
+
+.flex_layout_left {
+  justify-self: flex-start;
+}
+
+.flex_layout_right {
+  justify-self: flex-end;
+}
+
+.index-list-play {
+  position: absolute;
+  left: 35vw;
+  top: 13vw;
+  width: 25vw;
+  height: 25vw;
+}
+
+.index-list-playinfo {
+  position: absolute;
+  background: rgba(51, 51, 51, 0.72);
+  color: #FFFFFF;
+  bottom: 1vw;
+  right: 1vw;
+  border-radius: 3vw;
+  font-size: 4vw;
+  padding: 1vw 3.5vw;
+  width: 36.5vw;
+  height: 8vw;
+  margin-right: 1vw;
+  margin-bottom: 1vw;
+}
+
+.item-inner-margin {
+  margin-top: 2vw;
+}
+
+.video-div {
+  position: relative
+}
+
+.user-feedback {
+  font-size: 5vw;
+  padding-top: 3vw;
+  margin-bottom: 5vw;
+}
+
+.user-feedback-item {
+  margin-right: 2vw;
+}
+
+.user-feedback-active {
+  margin-right: 2vw;
+  color: #F4EA2A;
+}
+
+.title-font {
+  font-size: 4vw;
+}
+
+.hr {
+  background: #F0F0F0;
+  margin: 5vw 0;
+}
