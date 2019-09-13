@@ -1,8 +1,23 @@
 <template>	
-	<view>	
+	<view>
+		<!-- 滚动导航标签 -->
+		<view class="uni-tab-bar">
+			<scroll-view scroll-x class="uni-swiper-tab">
+				<block v-for="(tab,index) in tabBars" :key="tab.id">
+					<view class="swiper-tab-list" 
+					:class="{'active':tabIndex==index}"
+					@tap="tabtap(index)">
+						{{tab.name}}
+						<view class="swiper-tab-line"></view>
+					</view>
+				</block>
+			</scroll-view>
+		</view>
+		<!-- 图文，视频列表 -->
 		<block v-for="(item, index) in list" :key="index">
 			<index-list :item="item" :index="index"></index-list>
 		</block>
+		
 	</view>
 </template>
 
@@ -11,6 +26,15 @@
 	export default {
 		data() {
 			return {
+				tabIndex: 0,
+				tabBars: [
+					{ name: "关注", id: "guanzhu" },
+					{ name: "推荐", id: "tuijian" },
+					{ name: "体育", id: "tiyu" },
+					{ name: "热点", id: "redian" },
+					{ name: "财经", id: "caijing" },
+					{ name: "娱乐", id: "yule" }
+				],
 				list: [
 					{
 						userpic: "../../static/demo/userpic/12.jpg",
@@ -53,7 +77,9 @@
 
 		},
 		methods: {
-
+			tabtap(index) {
+				this.tabIndex = index;
+			}
 		},
 		components: {
 			indexList
@@ -62,5 +88,21 @@
 </script>
 
 <style>
-
+	.uni-swiper-tab {
+		border-bottom: 1upx solid #EEEEEE;
+	}
+	.swiper-tab-list {
+		color: #969696;
+		font-weight: bold;
+	}
+	.uni-tab-bar .active {
+		color: #343434;
+	}
+	.active .swiper-tab-line {
+		border-bottom: 6upx solid #FEDE33;
+		width: 70upx;
+		margin: auto;
+		border-top: 6upx solid #FEDE33;
+		border-radius: 20upx;
+	}
 </style>
