@@ -1,0 +1,10 @@
+.flex_layout_base {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  font-size: 4vw;
+  ion-button {
+    width: 20vw;
+  }
+}

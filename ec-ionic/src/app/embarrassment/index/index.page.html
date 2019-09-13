@@ -21,7 +21,22 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-    <app-index-item [item]="item" *ngFor="let item of items"></app-index-item>
-  </ion-list>
+  <app-nav-tab></app-nav-tab>
+  <ion-slides pager="true">
+    <ion-slide>
+      <ion-list>
+        <app-index-item [item]="item" *ngFor="let item of items"></app-index-item>
+      </ion-list>
+    </ion-slide>
+    <ion-slide>
+      <ion-list>
+        <app-index-item [item]="item" *ngFor="let item of items"></app-index-item>
+      </ion-list>
+    </ion-slide>
+    <ion-slide>
+      <ion-list>
+        <app-index-item [item]="item" *ngFor="let item of items"></app-index-item>
+      </ion-list>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
