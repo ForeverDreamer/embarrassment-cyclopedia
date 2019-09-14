@@ -13,12 +13,18 @@
 			@change="tabChange">
 				<swiper-item v-for="(items,index) in newslist" :key='index'>
 					<scroll-view scroll-y class="list" @scrolltolower="loadMore(index)">
-						<!-- 图文，视频列表 -->
-						<block v-for="(item, index1) in items.list" :key="index1">
-							<index-list :item="item" :index="index1"></index-list>
-						</block>
-						<!-- 上拉加载 -->
-						<loadMore :loadText="items.loadText"></loadMore>
+						<template v-if="items.list.length > 0">
+							<!-- 图文，视频列表 -->
+							<block v-for="(item, index1) in items.list" :key="index1">
+								<index-list :item="item" :index="index1"></index-list>
+							</block>
+							<!-- 上拉加载 -->
+							<loadMore :loadText="items.loadText"></loadMore>
+						</template>
+						<template v-else>
+							<!-- 无内容默认 -->
+							<noThing></noThing>
+						</template>
 					</scroll-view>
 				</swiper-item>
 			</swiper>
@@ -31,12 +37,14 @@
 	import indexList from "../../components/index/index-list.vue"
 	import swiperTabHead from "../../components/index/swiper-tab-head.vue"
 	import loadMore from "../../components/common/load-more.vue"
+	import noThing from "../../components/common/no-thing.vue"
 	
 	export default {
 		components: {
 			indexList,
 			swiperTabHead,
-			loadMore
+			loadMore,
+			noThing
 		},
 		data() {
 			return {
@@ -132,40 +140,40 @@
 					{
 						loadText: "上拉加载更多",
 						list: [
-							{
-								userpic: "../../static/demo/userpic/12.jpg",
-								username: "昵称",
-								isguanzhu: true,
-								title: "我是标题",
-								type: "img",  // img:图文, video:视频
-								playnum: null, // 单位:w(万次)
-								long: null,
-								titlepic: "../../static/demo/datapic/11.jpg",
-								infonum: {
-									index: 1,  // 0:没有操作, 1:顶, 2:踩
-									dingnum: 11,
-									cainum: 11
-								},
-								commentnum: 10,
-								sharenum: 10
-							},
-							{
-								userpic: "../../static/demo/userpic/12.jpg",
-								username: "昵称",
-								isguanzhu: false,
-								title: "我是标题",
-								type: "video",  // img:图文, video:视频
-								playnum: "20", // 单位:w(万次)
-								long: "2:47",
-								titlepic: "../../static/demo/datapic/11.jpg",
-								infonum: {
-									index: 2,  // 0:没有操作, 1:顶, 2:踩
-									dingnum: 11,
-									cainum: 11
-								},
-								commentnum: 10,
-								sharenum: 10
-							}
+							// {
+							// 	userpic: "../../static/demo/userpic/12.jpg",
+							// 	username: "昵称",
+							// 	isguanzhu: true,
+							// 	title: "我是标题",
+							// 	type: "img",  // img:图文, video:视频
+							// 	playnum: null, // 单位:w(万次)
+							// 	long: null,
+							// 	titlepic: "../../static/demo/datapic/11.jpg",
+							// 	infonum: {
+							// 		index: 1,  // 0:没有操作, 1:顶, 2:踩
+							// 		dingnum: 11,
+							// 		cainum: 11
+							// 	},
+							// 	commentnum: 10,
+							// 	sharenum: 10
+							// },
+							// {
+							// 	userpic: "../../static/demo/userpic/12.jpg",
+							// 	username: "昵称",
+							// 	isguanzhu: false,
+							// 	title: "我是标题",
+							// 	type: "video",  // img:图文, video:视频
+							// 	playnum: "20", // 单位:w(万次)
+							// 	long: "2:47",
+							// 	titlepic: "../../static/demo/datapic/11.jpg",
+							// 	infonum: {
+							// 		index: 2,  // 0:没有操作, 1:顶, 2:踩
+							// 		dingnum: 11,
+							// 		cainum: 11
+							// 	},
+							// 	commentnum: 10,
+							// 	sharenum: 10
+							// }
 						]
 					},
 					{
