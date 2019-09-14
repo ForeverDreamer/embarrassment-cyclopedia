@@ -4,7 +4,8 @@
 			"path": "pages/index/index",
 			"style": {
 				"app-plus": {
-					"scrollIndicator": "none", //隐藏滚动条
+					"scrollIndicator": "none",  //隐藏滚动条
+					"bounce": "none",  // 关闭反弹效果
 					"titleNView": {
 						// 搜索框
 						"searchInput": {
