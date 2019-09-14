@@ -22,21 +22,34 @@
 
 <ion-content padding>
   <app-nav-tab></app-nav-tab>
-  <ion-slides pager="true">
+
+  <ion-slides pager="true" #slides>
     <ion-slide>
       <ion-list>
-        <app-index-item [item]="item" *ngFor="let item of items"></app-index-item>
+        <app-index-item [item]="item" *ngFor="let item of items1"></app-index-item>
       </ion-list>
+      <ion-infinite-scroll (ionInfinite)="loadData($event, 0)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ion-slide>
     <ion-slide>
       <ion-list>
-        <app-index-item [item]="item" *ngFor="let item of items"></app-index-item>
+        <app-index-item [item]="item" *ngFor="let item of items2"></app-index-item>
       </ion-list>
+      <ion-infinite-scroll (ionInfinite)="loadData($event, 1)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ion-slide>
     <ion-slide>
       <ion-list>
-        <app-index-item [item]="item" *ngFor="let item of items"></app-index-item>
+        <app-index-item [item]="item" *ngFor="let item of items3"></app-index-item>
       </ion-list>
+      <ion-infinite-scroll (ionInfinite)="loadData($event, 2)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ion-slide>
   </ion-slides>
 </ion-content>
