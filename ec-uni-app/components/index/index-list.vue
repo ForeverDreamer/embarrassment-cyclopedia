@@ -1,18 +1,18 @@
 <template>
-	<view class="index-list">
+	<view class="index-list animated fadeInLeft fast">
 		<view class="index-list1 u-f-ac u-f-jsb">
 			<view class="u-f-ac">
 				<image :src="item.userpic" mode="widthFix" lazy-load></image>
 				{{item.username}}
 			</view>
-			<view class="u-f-ac" v-show="item.isguanzhu">
+			<view class="u-f-ac" v-show="!item.isguanzhu" @tap="guanZhu">
 				<view class="icon iconfont icon-zengjia">关注</view>
 			</view>
 		</view>
-		<view class="index-list2">
+		<view class="index-list2" @tap="openDetail">
 			{{item.title}}
 		</view>
-		<view class="index-list3 u-f-ajc">
+		<view class="index-list3 u-f-ajc" @tap="openDetail">
 			<!-- 图片 -->
 			<image :src="item.titlepic" mode="widthFix" lazy-load></image>
 			<!-- 视频 -->
@@ -23,11 +23,11 @@
 		</view>
 		<view class="index-list4 u-f-ac u-f-jsb">
 			<view class="u-f-ac">
-				<view class="u-f-ac" :class="{'active': item.infonum.index==1}">
+				<view class="u-f-ac" :class="{'active': item.infonum.index==1}" @tap="caozuo('ding')">
 					<view class="icon iconfont icon-icon_xiaolian-mian"></view>
 					{{item.infonum.dingnum}}
 				</view>
-				<view class="u-f-ac" :class="{'active': item.infonum.index==2}">
+				<view class="u-f-ac" :class="{'active': item.infonum.index==2}" @tap="caozuo('cai')">
 					<view class="icon iconfont icon-kulian"></view>
 					{{item.infonum.cainum}}
 				</view>
@@ -51,6 +51,42 @@
 		props: {
 			item: Object,
 			index: Number
+		},
+		methods: {
+			// 关注
+			guanZhu() {
+				this.item.isguanzhu = true;
+				uni.showToast({
+					title: '关注成功'
+				});
+			},
+			// 顶踩
+			caozuo(type) {
+				switch (type){
+					case "ding":
+					if ( this.item.infonum.index == 1 ) { return; }
+					this.item.infonum.dingnum++;
+					if ( this.item.infonum.index == 2 ) {
+						this.item.infonum.cainum--;
+					}
+					this.item.infonum.index = 1;
+						break;
+					case "cai":
+					if ( this.item.infonum.index == 2 ) { return; }
+					this.item.infonum.cainum++;
+					if ( this.item.infonum.index == 1 ) {
+						this.item.infonum.dingnum--;
+					}
+					this.item.infonum.index = 2;
+						break;
+					default:
+						break;
+				}
+			},
+			// 进入详情页
+			openDetail() {
+				console.log("进入详情页")
+			}
 		}
 	}
 </script>
