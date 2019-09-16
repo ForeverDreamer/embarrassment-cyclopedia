@@ -309,6 +309,17 @@
 				url: '../search/search'
 			});
 		},
+		// 监听原生标题导航按钮点击事件
+		onNavigationBarButtonTap(e) {
+			switch (e.index){
+				case 1:
+				// 打开发布页面
+				uni.navigateTo({
+					url: '../add-input/add-input'
+				});
+					break;
+			}
+		},
 		methods: {
 			// 上拉加载
 			loadMore(index) {
