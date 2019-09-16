@@ -24,3 +24,11 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+/* 动画库 */
+@import '~animate.css/animate.min.css';
+
+// 自定义toast样式，好像只有写在这里才生效
+.my-toast {
+  --width: 50vw;
+}
