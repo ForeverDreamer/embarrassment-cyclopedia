@@ -13,6 +13,7 @@ export class IndexPage implements OnInit {
     private items1: IndexItem[];
     private items2: IndexItem[];
     private items3: IndexItem[];
+    private items4: IndexItem[];
     @ViewChild('slides', {static: false}) slides: IonSlides;
 
     constructor() {
@@ -97,6 +98,7 @@ export class IndexPage implements OnInit {
                 '2:47'
             ),
         ];
+        this.items4 = [];
     }
 
     loadData(event, slideInx) {

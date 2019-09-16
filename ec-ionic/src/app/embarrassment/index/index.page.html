@@ -25,31 +25,60 @@
 
   <ion-slides pager="true" #slides>
     <ion-slide>
-      <ion-list>
-        <app-index-item [item]="item" *ngFor="let item of items1"></app-index-item>
-      </ion-list>
-      <ion-infinite-scroll (ionInfinite)="loadData($event, 0)">
-        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
+      <div *ngIf="items1.length > 0; else nothingBlock">
+        <ion-list>
+          <app-index-item [item]="item" *ngFor="let item of items1"></app-index-item>
+        </ion-list>
+        <ion-infinite-scroll (ionInfinite)="loadData($event, 0)">
+          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </div>
+      <ng-template #nothingBlock>
+        <app-nothing></app-nothing>
+      </ng-template>
     </ion-slide>
     <ion-slide>
-      <ion-list>
-        <app-index-item [item]="item" *ngFor="let item of items2"></app-index-item>
-      </ion-list>
-      <ion-infinite-scroll (ionInfinite)="loadData($event, 1)">
-        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
+      <div *ngIf="items2.length > 0; else nothingBlock">
+        <ion-list>
+          <app-index-item [item]="item" *ngFor="let item of items2"></app-index-item>
+        </ion-list>
+        <ion-infinite-scroll (ionInfinite)="loadData($event, 1)">
+          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </div>
+      <ng-template #nothingBlock>
+        <app-nothing></app-nothing>
+      </ng-template>
     </ion-slide>
     <ion-slide>
-      <ion-list>
-        <app-index-item [item]="item" *ngFor="let item of items3"></app-index-item>
-      </ion-list>
-      <ion-infinite-scroll (ionInfinite)="loadData($event, 2)">
-        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
+      <div *ngIf="items3.length > 0; else nothingBlock">
+        <ion-list>
+          <app-index-item [item]="item" *ngFor="let item of items3"></app-index-item>
+        </ion-list>
+        <ion-infinite-scroll (ionInfinite)="loadData($event, 2)">
+          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </div>
+      <ng-template #nothingBlock>
+        <app-nothing></app-nothing>
+      </ng-template>
+    </ion-slide>
+    <ion-slide>
+      <div *ngIf="items4.length > 0; else nothingBlock">
+        <ion-list>
+          <app-index-item [item]="item" *ngFor="let item of items4"></app-index-item>
+        </ion-list>
+        <ion-infinite-scroll (ionInfinite)="loadData($event, 3)">
+          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </div>
+      <ng-template #nothingBlock>
+        <app-nothing></app-nothing>
+      </ng-template>
     </ion-slide>
   </ion-slides>
 </ion-content>
