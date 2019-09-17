@@ -14,19 +14,35 @@
 		<!-- <view>文本框输入内容为：{{text}}</view> -->
 		<!-- 上传多图 -->
 		<upload-images @upload="onUpload"></upload-images>
+		<!-- 弹出公告 -->
+		<button @click="openPopup">打开弹出层</button>
+		<uni-popup ref="popup" type="center" :mask-click="false">
+			<view class="gonggao">
+				<view class="u-f-ajc">
+					<image src="../../static/common/add-input.png" mode="widthFix"></image>
+				</view>
+				<view>1.涉及黄色，政治，广告及骚扰信息</view>
+				<view>1.涉及黄色，政治，广告及骚扰信息</view>
+				<view>1.涉及黄色，政治，广告及骚扰信息</view>
+				<view>1.涉及黄色，政治，广告及骚扰信息</view>
+				<button type="default" @click="closePopup">朕知道了</button>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
 	import uniNavBar from "../../components/uni-nav-bar/uni-nav-bar.vue"
 	import uploadImages from "../../components/common/upload-images.vue"
+	import uniPopup from "../../components/uni-popup/uni-popup.vue"
 	
 	let chgLook = ['所有人可见', '仅自己可见'];
 	
 	export default {
 		components: {
 			uniNavBar,
-			uploadImages
+			uploadImages,
+			uniPopup
 		},
 		data() {
 			return {
@@ -60,6 +76,12 @@
 			onUpload(imgArr) {
 				this.imgList = imgArr;
 				console.log(this.imgList);
+			},
+			openPopup(){
+			            this.$refs.popup.open()
+			},
+			closePopup(){
+				this.$refs.popup.close()
 			}
 		}
 	}
@@ -67,6 +89,17 @@
 
 <style>
 	.uni-textarea {
-		border: 1upx solid #EEEEEE;
+		border: 1rpx solid #EEEEEE;
+	}
+	.gonggao {
+		width: 500rpx;
+	}
+	.gonggao image {
+		width: 50%;
+		margin-bottom: 20rpx;
+	}
+	.gonggao button {
+		background: #FFE934;
+		color: #171606;
 	}
 </style>
