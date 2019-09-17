@@ -2,8 +2,8 @@
 	<view>
 		<!-- 自定义导航栏 -->
 		<uni-nav-bar status-bar="true" right-text="发布" left-icon="arrowleft" @click-left="back" @click-right="submit" >
-			<view class="u-f-ajc" @tap="changeLook">
-				<view>所有人可见</view>
+			<view class="u-f-ajc nav-tab-bar" @tap="changeLook">
+				<view>{{yinsi}}</view>
 				<view class="icon iconfont icon-xialazhankai"></view>
 			</view>
 		</uni-nav-bar>
@@ -97,7 +97,6 @@
 				uni.showActionSheet({
 				    itemList: chgLook,
 				    success: (res) => {
-						console.log(res.tapIndex);
 				        this.yinsi = chgLook[res.tapIndex];
 				    }
 				});
@@ -131,5 +130,9 @@
 	.gonggao button {
 		background: #FFE934;
 		color: #171606;
+	}
+	.nav-tab-bar {
+		width: 100%;
+		margin-left: -25rpx;
 	}
 </style>
