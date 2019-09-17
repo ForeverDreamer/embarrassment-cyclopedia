@@ -7,6 +7,11 @@
 				<view class="icon iconfont icon-xialazhankai"></view>
 			</view>
 		</uni-nav-bar>
+		<!-- 多行输入框 -->
+		<view class="uni-textarea">
+			<textarea v-model="text" placeholder="说一句话吧"/>
+		</view>
+		<!-- <view>文本框输入内容为：{{text}}</view> -->
 	</view>
 </template>
 
@@ -21,7 +26,8 @@
 		},
 		data() {
 			return {
-				yinsi: "所有人可见"
+				yinsi: "所有人可见",
+				text: ""
 			}
 		},
 		methods: {
@@ -50,5 +56,7 @@
 </script>
 
 <style>
-
+	.uni-textarea {
+		border: 1upx solid #EEEEEE;
+	}
 </style>
