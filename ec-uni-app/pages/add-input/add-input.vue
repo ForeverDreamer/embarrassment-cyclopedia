@@ -46,12 +46,42 @@
 		},
 		data() {
 			return {
+				isGet: false,
 				yinsi: "所有人可见",
 				text: "",
 				imgList: []
 			}
 		},
+		onBackPress() {
+			// 如果用户有编辑内容
+			if (!this.text && this.imgList.length < 1) {
+				return;
+			}
+			if (!this.isGet) {
+				this.baocun();
+				return true;
+			}	
+		},
 		methods: {
+			// 保存为草稿
+			baocun() {
+				uni.showModal({
+					content: '是否要保存为草稿？',
+					cancelText: '不保存',
+					confirmText: '保存',
+					success: res => {
+						if (res.confirm) {
+							console.log("保存")
+						} else {
+							console.log("不保存")
+						}
+						this.isGet = true;
+						uni.navigateBack({
+							delta: 1
+						});
+					}
+				});
+			},
 			// 返回
 			back() {
 				uni.navigateBack({
