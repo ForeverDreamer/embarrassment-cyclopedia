@@ -27,6 +27,17 @@
 							placeholder="搜索内容" />
 						</view>
 						<!-- 轮播图 -->
+						<swiper class="topic-swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
+							<swiper-item>
+								<image src="../../static/demo/banner1.jpg" mode="widthFix" lazy-load></image>
+							</swiper-item>
+							<swiper-item>
+								<image src="../../static/demo/banner2.jpg" mode="widthFix" lazy-load></image>
+							</swiper-item>
+							<swiper-item>
+								<image src="../../static/demo/banner3.jpg" mode="widthFix" lazy-load></image>
+							</swiper-item>
+						</swiper>
 						<!-- 热门分类 -->
 						<!-- 最近更新 -->
 					</scroll-view>
@@ -196,5 +207,12 @@
 		display: flex;
 		justify-content: center;
 		font-size: 27rpx;
+	}
+	.topic-swiper {
+		padding: 0 20rpx 20rpx 20rpx;
+	}
+	.topic-swiper image {
+		width: 100%;
+		border-radius: 10rpx;
 	}
 </style>
