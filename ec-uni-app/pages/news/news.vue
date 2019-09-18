@@ -20,7 +20,15 @@
 				<!-- 话题 -->
 				<swiper-item>
 					<scroll-view scroll-y class="list">
-					话题
+						<!-- 搜索框 -->
+						<view class="seach-input">
+							<input class="uni-input" 
+							placeholder-class="icon iconfont icon-sousuo topic-search" 
+							placeholder="搜索内容" />
+						</view>
+						<!-- 轮播图 -->
+						<!-- 热门分类 -->
+						<!-- 最近更新 -->
 					</scroll-view>
 				</swiper-item>
 			</swiper>
@@ -42,7 +50,7 @@
 		data() {
 			return {
 				swiperHeight: 500,
-				tabIndex: 0,
+				tabIndex: 1,
 				tabBars: [
 					{name: "关注", id: "guanzhu"},
 					{name: "话题", id: "topic"}
@@ -175,5 +183,18 @@
 </script>
 
 <style>
-
+	.seach-input {
+		/* border: 1rpx solid; */
+		padding: 20rpx;
+	}
+	.seach-input>input {
+		/* border: 1rpx solid; */
+		background: #F4F4F4;
+		border-radius: 10rpx;
+	}
+	.topic-search {
+		display: flex;
+		justify-content: center;
+		font-size: 27rpx;
+	}
 </style>
