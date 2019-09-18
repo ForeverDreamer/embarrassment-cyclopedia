@@ -27,18 +27,31 @@
 							placeholder="搜索内容" />
 						</view>
 						<!-- 轮播图 -->
-						<swiper class="topic-swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
-							<swiper-item>
-								<image src="../../static/demo/banner1.jpg" mode="widthFix" lazy-load></image>
-							</swiper-item>
-							<swiper-item>
-								<image src="../../static/demo/banner2.jpg" mode="widthFix" lazy-load></image>
-							</swiper-item>
-							<swiper-item>
-								<image src="../../static/demo/banner3.jpg" mode="widthFix" lazy-load></image>
-							</swiper-item>
+						<swiper class="topic-swiper" :indicator-dots="true" 
+						:autoplay="true" :interval="3000" :duration="1000">
+							<block v-for="(item, index) in topic.swiper" :key="index">
+								<swiper-item>
+									<image :src="item.src" mode="widthFix" lazy-load></image>
+								</swiper-item>
+							</block>
 						</swiper>
 						<!-- 热门分类 -->
+						<view class="topic-nav">
+							<view class="u-f-ac u-f-jsb">
+								<view>热门分类</view>
+								<view class="u-f-ac">
+									更多<view class="icon iconfont icon-jinru"></view>
+								</view>
+							</view>
+							<view class="u-f-ac u-f-jsb">
+								<view>最新</view>
+								<view>游戏</view>
+								<view>打卡</view>
+								<view>情感</view>
+								<view>故事</view>
+								<view>喜爱</view>
+							</view>
+						</view>
 						<!-- 最近更新 -->
 					</scroll-view>
 				</swiper-item>
@@ -140,7 +153,14 @@
 							goodnum: 20
 						}
 					]
-				}	
+				},
+				topic: {
+					swiper: [
+						{ src: "../../static/demo/banner1.jpg" },
+						{ src: "../../static/demo/banner2.jpg" },
+						{ src: "../../static/demo/banner3.jpg" }
+					]
+				}
 			}
 		},
 		onLoad() {
@@ -214,5 +234,27 @@
 	.topic-swiper image {
 		width: 100%;
 		border-radius: 10rpx;
+	}
+	.topic-nav {
+		border-top: 1rpx solid #EEEEEE;
+		border-bottom: 1rpx solid #EEEEEE;
+		padding: 20rpx;
+	}
+	
+	.topic-nav>view:first-child {
+		margin-bottom: 10rpx;
+	}
+	.topic-nav>view:first-child>view {
+		color: #B2B2B2;
+	}
+	.topic-nav>view:first-child>view:first-child {
+		color: #333333;
+		font-size: 32rpx;
+	}
+	.topic-nav>view:last-child>view {
+		background: #F7F7F7;
+		color: #B2B2B2;
+		border-radius: 10rpx;
+		padding: 10rpx 25rpx;
 	}
 </style>
