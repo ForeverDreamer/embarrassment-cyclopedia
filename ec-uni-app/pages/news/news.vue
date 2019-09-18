@@ -2,10 +2,27 @@
 	<view>
 		<!-- 自定义导航栏 -->
 		<news-nav-bar :tabBars="tabBars" :tabIndex="tabIndex" @change-tab="changeTab"></news-nav-bar>
-		<!-- 列表 -->
-		<block v-for="(item, index) in list" :key="index">
-			<common-list :item="item" :index="index"></common-list>
-		</block>
+		<view class="uni-tab-bar">
+			<swiper class="swiper-box" 
+			:style="{height:swiperHeight+'px'}" 
+			:current="tabIndex" 
+			@change="tabChange">
+				<!-- 关注 -->
+				<swiper-item>
+					<scroll-view scroll-y class="list">
+						<block v-for="(item, index) in list" :key="index">
+							<common-list :item="item" :index="index"></common-list>
+						</block>
+					</scroll-view>
+				</swiper-item>
+				<!-- 话题 -->
+				<swiper-item>
+					<scroll-view scroll-y class="list">
+					话题
+					</scroll-view>
+				</swiper-item>
+			</swiper>
+		</view>
 	</view>
 </template>
 
@@ -20,6 +37,7 @@
 		},
 		data() {
 			return {
+				swiperHeight: 500,
 				tabIndex: 0,
 				tabBars: [
 					{name: "关注", id: "guanzhu"},
@@ -99,9 +117,21 @@
 				]
 			}
 		},
+		onLoad() {
+			uni.getSystemInfo({
+				success: (res) => {
+					this.swiperHeight = res.windowHeight - uni.upx2px(100)
+				}
+			})
+		},
 		methods: {
+			// 点击切换
 			changeTab(index) {
 				this.tabIndex = index;
+			},
+			// 滑动事件
+			tabChange(e) {
+				this.tabIndex = e.detail.current;
 			}
 		}
 	}
