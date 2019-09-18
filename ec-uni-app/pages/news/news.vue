@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 自定义导航栏 -->
-		<uni-nav-bar status-bar="true" @click-right="openAdd" >
+		<uni-nav-bar fixed="true" status-bar="true" @click-right="openAdd" >
 			<!-- 左边 -->
 			<view slot="left" class="nav-left">
 				<view class="icon iconfont icon-qiandao"></view>
@@ -21,52 +21,20 @@
 			</view>
 		</uni-nav-bar>
 		<!-- 列表 -->
-		<view class="common-list u-f">
-			<view class="common-list-1">
-				<image src="../../static/demo/userpic/12.jpg" mode="widthFix" lazy-load></image>
-			</view>
-			<view class="common-list-r">
-				<view class="u-f-ac u-f-jsb">
-					<view class="u-f-ac">
-						昵称
-						<view class="tag-sex icon iconfont icon-nan">25</view>
-					</view>
-					<view class="icon iconfont icon-zengjia">关注</view>
-				</view>
-				<view>我是标题</view>
-				<view class="u-f-ajc">
-					<!-- 图片 -->
-					<!-- <image src="../../static/demo/datapic/13.jpg" mode="widthFix" lazy-load></image> -->
-					<!-- 视频 -->
-<!-- 					<view class="common-list-play icon iconfont icon-bofang"></view>
-					<view class="common-list-playinfo">
-						20w 次播放 2:47
-					</view> -->
-					<!-- 分享 -->
-					<view class="common-list-share u-f-ac">
-						<image src="../../static/demo/datapic/14.jpg" mode="widthFix" lazy-load></image>
-						<view>我是标题</view>
-					</view>
-				</view>
-				<view class="u-f-ac u-f-jsb">
-					<view>深圳 龙岗</view>
-					<view class="u-f-ac">
-						<view class="icon iconfont icon-zhuanfa">10</view>
-						<view class="icon iconfont icon-pinglun1">20</view>
-						<view class="icon iconfont icon-dianzan1">30</view>
-					</view>
-				</view>
-			</view>
-		</view>
+		<block v-for="(item, index) in list" :key="index">
+			<common-list :item="item" :index="index"></common-list>
+		</block>
 	</view>
 </template>
 
 <script>
 	import uniNavBar from "../../components/uni-nav-bar/uni-nav-bar.vue"
+	import commonList from "../../components/common/common-list.vue"
 	
 	export default {
 		components: {
-			uniNavBar
+			uniNavBar,
+			commonList
 		},
 		data() {
 			return {
@@ -74,6 +42,78 @@
 				tabBars: [
 					{name: "关注", id: "guanzhu"},
 					{name: "话题", id: "topic"}
+				],
+				list: [
+					// 文字
+					{
+						userpic: "../../static/demo/userpic/12.jpg",
+						username: "哈哈",
+						sex: 0,  // 0 男, 1 女
+						age: 25,
+						isguanzhu: false,
+						title: "我是文字",
+						titlepic: "",
+						video: false,
+						share: false,
+						path: "深圳 龙岗",
+						sharenum: 20,
+						commentnum: 30,
+						goodnum: 20
+					},
+					// 图文
+					{
+						userpic: "../../static/demo/userpic/12.jpg",
+						username: "哈哈",
+						sex: 0,  // 0 男, 1 女
+						age: 25,
+						isguanzhu: false,
+						title: "我是图文",
+						titlepic: "../../static/demo/datapic/13.jpg",
+						video: false,
+						share: false,
+						path: "深圳 龙岗",
+						sharenum: 20,
+						commentnum: 30,
+						goodnum: 20
+					},
+					// 视频
+					{
+						userpic: "../../static/demo/userpic/12.jpg",
+						username: "哈哈",
+						sex: 0,  // 0 男, 1 女
+						age: 25,
+						isguanzhu: false,
+						title: "我是视频",
+						titlepic: "../../static/demo/datapic/13.jpg",
+						video: {
+							looknum: 20,  // 单位w(万)
+							long: "2:47"
+						},
+						share: false,
+						path: "深圳 龙岗",
+						sharenum: 20,
+						commentnum: 30,
+						goodnum: 20
+					},
+					// 分享
+					{
+						userpic: "../../static/demo/userpic/12.jpg",
+						username: "哈哈",
+						sex: 0,  // 0 男, 1 女
+						age: 25,
+						isguanzhu: false,
+						title: "我是分享",
+						titlepic: "",
+						video: false,
+						share: {
+							title: "分享标题",
+							titlepic: "../../static/demo/datapic/14.jpg"
+						},
+						path: "深圳 龙岗",
+						sharenum: 20,
+						commentnum: 30,
+						goodnum: 20
+					}
 				]
 			}
 		},
@@ -129,85 +169,5 @@
 		border-radius: 20rpx;
 		position: absolute;
 		bottom: 5rpx;
-	}
-	.common-list {
-		padding: 20rpx;
-	}
-	.common-list-1 {
-		flex-shrink: 0;
-	}
-	.common-list-1 image {
-		width: 90rpx;
-		height: 90rpx;
-		border-radius: 100%;
-	}
-	.common-list-r {
-		flex: 1;
-		margin-left: 15rpx;
-		border-bottom: 1rpx solid #EEEEEE;
-		padding-bottom: 10rpx;
-	}
-	.common-list-r>view:nth-child(3)>image {
-		width: 100%;
-		border-radius: 10rpx;
-	}
-	.common-list-r>view:nth-child(1)>view:first-child {
-		color: #999999;
-		font-size: 30rpx;
-	}
-	.tag-sex {
-		background: #44B3FF;
-		color: #FFFFFF;
-		font-size: 23rpx;
-		padding: 5rpx 10rpx;
-		margin-left: 10rpx;
-		border-radius: 20rpx;
-		line-height: 22rpx;
-	}
-	.common-list-r>view:nth-child(1)>view:last-child {
-		background: #EEEEEE;
-		padding: 0 10rpx;
-		font-size: 26rpx;
-	}
-	.common-list-r>view:nth-child(2) {
-		font-size: 32rpx;
-		padding: 10rpx 0;
-	}
-	.common-list-r>view:nth-child(3) {
-		position: relative;
-	}
-	.common-list-play, .common-list-playinfo {
-		position: absolute;
-		color: #FFFFFF;
-	}
-	.common-list-play {
-		font-size: 130rpx;
-	}
-	.common-list-playinfo {
-		right: 10rpx;
-		bottom: 10rpx;
-		background: rgba(51, 51, 51, 0.73);
-		border-radius: 10rpx;
-		padding: 0 20rpx;
-		font-size: 26rpx;
-	}
-	.common-list-r>view:nth-child(4)>view {
-		color: #AAAAAA;
-	}
-	.common-list-r>view:nth-child(4)>view:nth-child(2)>view {
-		margin-left: 10rpx;
-		padding-left: 5rpx;
-		font-size: 28rpx;
-	}
-	.common-list-share {
-		background: #EEEEEE;
-		width: 100%;
-		padding: 10rpx;
-		border-radius: 10rpx;
-	}
-	.common-list-share>image {
-		width: 200rpx;
-		height: 150rpx;
-		margin-right: 10rpx;
 	}
 </style>
