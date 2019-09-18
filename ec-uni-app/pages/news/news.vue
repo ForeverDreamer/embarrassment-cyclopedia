@@ -36,11 +36,16 @@
 				<view>我是标题</view>
 				<view class="u-f-ajc">
 					<!-- 图片 -->
-					<image src="../../static/demo/datapic/13.jpg" mode="widthFix" lazy-load></image>
+					<!-- <image src="../../static/demo/datapic/13.jpg" mode="widthFix" lazy-load></image> -->
 					<!-- 视频 -->
-					<view class="common-list-play icon iconfont icon-bofang"></view>
+<!-- 					<view class="common-list-play icon iconfont icon-bofang"></view>
 					<view class="common-list-playinfo">
 						20w 次播放 2:47
+					</view> -->
+					<!-- 分享 -->
+					<view class="common-list-share u-f-ac">
+						<image src="../../static/demo/datapic/14.jpg" mode="widthFix" lazy-load></image>
+						<view>我是标题</view>
 					</view>
 				</view>
 				<view class="u-f-ac u-f-jsb">
@@ -193,5 +198,16 @@
 		margin-left: 10rpx;
 		padding-left: 5rpx;
 		font-size: 28rpx;
+	}
+	.common-list-share {
+		background: #EEEEEE;
+		width: 100%;
+		padding: 10rpx;
+		border-radius: 10rpx;
+	}
+	.common-list-share>image {
+		width: 200rpx;
+		height: 150rpx;
+		margin-right: 10rpx;
 	}
 </style>
