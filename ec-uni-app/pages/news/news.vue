@@ -34,8 +34,14 @@
 					<view class="icon iconfont icon-zengjia">关注</view>
 				</view>
 				<view>我是标题</view>
-				<view>
+				<view class="u-f-ajc">
+					<!-- 图片 -->
 					<image src="../../static/demo/datapic/13.jpg" mode="widthFix" lazy-load></image>
+					<!-- 视频 -->
+					<view class="common-list-play icon iconfont icon-bofang"></view>
+					<view class="common-list-playinfo">
+						20w 次播放 2:47
+					</view>
 				</view>
 				<view class="u-f-ac u-f-jsb">
 					<view>深圳 龙岗</view>
@@ -163,7 +169,22 @@
 		padding: 10rpx 0;
 	}
 	.common-list-r>view:nth-child(3) {
-
+		position: relative;
+	}
+	.common-list-play, .common-list-playinfo {
+		position: absolute;
+		color: #FFFFFF;
+	}
+	.common-list-play {
+		font-size: 130rpx;
+	}
+	.common-list-playinfo {
+		right: 10rpx;
+		bottom: 10rpx;
+		background: rgba(51, 51, 51, 0.73);
+		border-radius: 10rpx;
+		padding: 0 20rpx;
+		font-size: 26rpx;
 	}
 	.common-list-r>view:nth-child(4)>view {
 		color: #AAAAAA;
@@ -171,5 +192,6 @@
 	.common-list-r>view:nth-child(4)>view:nth-child(2)>view {
 		margin-left: 10rpx;
 		padding-left: 5rpx;
+		font-size: 28rpx;
 	}
 </style>
