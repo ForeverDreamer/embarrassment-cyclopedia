@@ -19,7 +19,7 @@
 								<index-list :item="item" :index="index1"></index-list>
 							</block>
 							<!-- 上拉加载 -->
-							<loadMore :loadText="items.loadText"></loadMore>
+							<load-more :loadText="items.loadText"></load-more>
 						</template>
 						<template v-else>
 							<!-- 无内容默认 -->
