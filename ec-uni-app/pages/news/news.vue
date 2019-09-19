@@ -40,14 +40,9 @@
 						<!-- 最近更新 -->
 						<view class="topic-new">
 							<view>最近更新</view>
-							<view class="topic-list u-f">
-								<image src="../../static/demo/topicpic/13.jpeg" mode="widthFix" lazy-load></image>
-								<view>
-									<view>#淘宝记录簿#</view>
-									<view>120斤到85斤 我的反转人生</view>
-									<view>动态 545 今日 720</view>
-								</view>
-							</view>
+							<block v-for="(item, index) in topic.list" :key="index">
+								<topic-list :item="item" :index="index"></topic-list>
+							</block>
 						</view>
 					</scroll-view>
 				</swiper-item>
@@ -61,18 +56,20 @@
 	import commonList from "../../components/common/common-list.vue"
 	import loadMore from "../../components/common/load-more.vue"
 	import topicNav from "../../components/news/topic-nav.vue"
+	import topicList from "../../components/news/topic-list.vue"
 	
 	export default {
 		components: {
 			newsNavBar,
 			commonList,
 			loadMore,
-			topicNav
+			topicNav,
+			topicList
 		},
 		data() {
 			return {
 				swiperHeight: 500,
-				tabIndex: 1,
+				tabIndex: 0,
 				tabBars: [
 					{name: "关注", id: "guanzhu"},
 					{name: "话题", id: "topic"}
@@ -165,6 +162,36 @@
 						{ name: "情感" },
 						{ name: "故事" },
 						{ name: "喜爱" }
+					],
+					list: [
+						{
+							titlepic: "../../static/demo/topicpic/13.jpeg",
+							title: "淘宝记录簿",
+							desc: "120斤到85斤 我的反转人生",
+							totalnum: 50,
+							todaynum: 10
+						},
+						{
+							titlepic: "../../static/demo/topicpic/13.jpeg",
+							title: "淘宝记录簿",
+							desc: "120斤到85斤 我的反转人生",
+							totalnum: 50,
+							todaynum: 10
+						},
+						{
+							titlepic: "../../static/demo/topicpic/13.jpeg",
+							title: "淘宝记录簿",
+							desc: "120斤到85斤 我的反转人生",
+							totalnum: 50,
+							todaynum: 10
+						},
+						{
+							titlepic: "../../static/demo/topicpic/13.jpeg",
+							title: "淘宝记录簿",
+							desc: "120斤到85斤 我的反转人生",
+							totalnum: 50,
+							todaynum: 10
+						}
 					]
 				}
 			}
@@ -249,24 +276,5 @@
 		font-size: 26rpx;
 		font-weight: bold;
 		color: #363636;
-	}
-	.topic-list {
-		padding: 10rpx 0;
-		border-bottom: 1rpx solid #EEEEEE;
-		padding-bottom: 30rpx;
-	}
-	.topic-list image {
-		width: 175rpx;
-		height: 175rpx;
-		border-radius: 10rpx;
-		margin-right: 30rpx;
-	}
-	.topic-list>view>view {
-		color: #A4A4A4;
-		font-size: 24rpx;
-	}
-	.topic-list>view>view:first-child {
-		color: #333333;
-		font-size: 32rpx;
 	}
 </style>
