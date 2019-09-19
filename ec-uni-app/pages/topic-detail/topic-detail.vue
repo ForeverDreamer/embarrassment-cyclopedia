@@ -15,6 +15,8 @@
 			<block v-for="(listitem, listindex) in tablist[tabIndex].list" :key="listindex">
 				<common-list :item="listitem" :index="listindex"></common-list>
 			</block>
+			<!-- 上拉加载 -->
+			<load-more :loadText="tablist[tabIndex].loadText"></load-more>
 		</view>
 	</view>
 </template>
@@ -23,12 +25,14 @@
 	import topicInfo from "../../components/topic/topic-info.vue"
 	import swiperTabHead from "../../components/index/swiper-tab-head.vue"
 	import commonList from "../../components/common/common-list.vue"
+	import loadMore from "../../components/common/load-more.vue"
 	
 	export default {
 		components: {
 			topicInfo,
 			swiperTabHead,
-			commonList
+			commonList,
+			loadMore
 		},
 		data() {
 			return {
@@ -198,7 +202,40 @@
 				]
 			}
 		},
+		onReachBottom() {
+			this.loadMore();
+		},
 		methods: {
+			// 上拉加载
+			loadMore() {
+				if (this.tablist[this.tabIndex].loadText != "上拉加载更多") {
+					return;
+				}
+				// 修改状态
+				this.tablist[this.tabIndex].loadText = "加载中...";
+				// 获取数据
+				setTimeout( () => {
+					// 获取完成
+					let obj = {
+						userpic: "../../static/demo/userpic/12.jpg",
+						username: "哈哈",
+						sex: 0,  // 0 男, 1 女
+						age: 25,
+						isguanzhu: false,
+						title: "我是图文",
+						titlepic: "../../static/demo/datapic/13.jpg",
+						video: false,
+						share: false,
+						path: "深圳 龙岗",
+						sharenum: 20,
+						commentnum: 30,
+						goodnum: 20
+					};
+					this.tablist[this.tabIndex].list.push(obj);
+					this.tablist[this.tabIndex].loadText = "上拉加载更多";
+				}, 1000)
+				// this.tablist[this.tabIndex].loadText = "没有更多数据了";
+			},
 			// tabbar点击事件
 			tabtap(index) {
 				this.tabIndex = index;
