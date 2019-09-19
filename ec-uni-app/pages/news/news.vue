@@ -36,22 +36,7 @@
 							</block>
 						</swiper>
 						<!-- 热门分类 -->
-						<view class="topic-nav">
-							<view class="u-f-ac u-f-jsb">
-								<view>热门分类</view>
-								<view class="u-f-ac">
-									更多<view class="icon iconfont icon-jinru"></view>
-								</view>
-							</view>
-							<view class="u-f-ac u-f-jsb">
-								<view>最新</view>
-								<view>游戏</view>
-								<view>打卡</view>
-								<view>情感</view>
-								<view>故事</view>
-								<view>喜爱</view>
-							</view>
-						</view>
+						<topic-nav :nav="topic.nav"></topic-nav>
 						<!-- 最近更新 -->
 					</scroll-view>
 				</swiper-item>
@@ -64,12 +49,14 @@
 	import newsNavBar from "../../components/news/news-nav-bar.vue"
 	import commonList from "../../components/common/common-list.vue"
 	import loadMore from "../../components/common/load-more.vue"
+	import topicNav from "../../components/news/topic-nav.vue"
 	
 	export default {
 		components: {
 			newsNavBar,
 			commonList,
-			loadMore
+			loadMore,
+			topicNav
 		},
 		data() {
 			return {
@@ -159,6 +146,14 @@
 						{ src: "../../static/demo/banner1.jpg" },
 						{ src: "../../static/demo/banner2.jpg" },
 						{ src: "../../static/demo/banner3.jpg" }
+					],
+					nav: [
+						{ name: "最新" },
+						{ name: "游戏" },
+						{ name: "打卡" },
+						{ name: "情感" },
+						{ name: "故事" },
+						{ name: "喜爱" }
 					]
 				}
 			}
@@ -234,27 +229,5 @@
 	.topic-swiper image {
 		width: 100%;
 		border-radius: 10rpx;
-	}
-	.topic-nav {
-		border-top: 1rpx solid #EEEEEE;
-		border-bottom: 1rpx solid #EEEEEE;
-		padding: 20rpx;
-	}
-	
-	.topic-nav>view:first-child {
-		margin-bottom: 10rpx;
-	}
-	.topic-nav>view:first-child>view {
-		color: #B2B2B2;
-	}
-	.topic-nav>view:first-child>view:first-child {
-		color: #333333;
-		font-size: 32rpx;
-	}
-	.topic-nav>view:last-child>view {
-		background: #F7F7F7;
-		color: #B2B2B2;
-		border-radius: 10rpx;
-		padding: 10rpx 25rpx;
 	}
 </style>
