@@ -205,7 +205,93 @@
 		onReachBottom() {
 			this.loadMore();
 		},
+		// 监听下拉刷新
+		onPullDownRefresh() {
+			this.getdata();
+		},
 		methods: {
+			// 上拉刷新
+			getdata() {
+				// 关闭下拉刷新
+				setTimeout( () => {
+					// 获取数据
+					let arry = [
+								// 文字
+								{
+									userpic: "../../static/demo/userpic/9.jpg",
+									username: "嘻嘻",
+									sex: 0,  // 0 男, 1 女
+									age: 25,
+									isguanzhu: false,
+									title: "我是文字嘻嘻",
+									titlepic: "",
+									video: false,
+									share: false,
+									path: "深圳 龙岗",
+									sharenum: 20,
+									commentnum: 30,
+									goodnum: 20
+								},
+								// 图文
+								{
+									userpic: "../../static/demo/userpic/9.jpg",
+									username: "嘻嘻",
+									sex: 0,  // 0 男, 1 女
+									age: 25,
+									isguanzhu: false,
+									title: "我是图文嘻嘻",
+									titlepic: "../../static/demo/datapic/14.jpg",
+									video: false,
+									share: false,
+									path: "深圳 龙岗",
+									sharenum: 20,
+									commentnum: 30,
+									goodnum: 20
+								},
+								// 视频
+								{
+									userpic: "../../static/demo/userpic/9.jpg",
+									username: "嘻嘻",
+									sex: 0,  // 0 男, 1 女
+									age: 25,
+									isguanzhu: false,
+									title: "我是视频嘻嘻",
+									titlepic: "../../static/demo/datapic/14.jpg",
+									video: {
+										looknum: 20,  // 单位w(万)
+										long: "2:47"
+									},
+									share: false,
+									path: "深圳 龙岗",
+									sharenum: 20,
+									commentnum: 30,
+									goodnum: 20
+								},
+								// 分享
+								{
+									userpic: "../../static/demo/userpic/9.jpg",
+									username: "嘻嘻",
+									sex: 0,  // 0 男, 1 女
+									age: 25,
+									isguanzhu: false,
+									title: "我是分享嘻嘻",
+									titlepic: "",
+									video: false,
+									share: {
+										title: "分享标题",
+										titlepic: "../../static/demo/datapic/11.jpg"
+									},
+									path: "深圳 龙岗",
+									sharenum: 20,
+									commentnum: 30,
+									goodnum: 20
+								}
+							];
+					// 赋值
+					this.tablist[this.tabIndex].list = arry;
+					uni.stopPullDownRefresh();
+				}, 2000);
+			},
 			// 上拉加载
 			loadMore() {
 				if (this.tablist[this.tabIndex].loadText != "上拉加载更多") {
