@@ -1,6 +1,6 @@
 <template>
 	<view class="paper-list u-f-ac animated fadeInLeft fast">
-		<image :src="item.userpic" mode="widthFix" lazy-load style="border: 1rpx solid;"></image>
+		<image :src="item.userpic" mode="widthFix" lazy-load></image>
 		<view>
 			<view class="u-f-ac u-f-jsb">
 				<view>{{item.username}}</view>				
