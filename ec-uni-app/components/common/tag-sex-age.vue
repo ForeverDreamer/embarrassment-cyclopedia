@@ -23,4 +23,7 @@
 		border-radius: 20rpx;
 		line-height: 22rpx;
 	}
+	.icon-nv {
+		background: #FF698D!important;
+	}
 </style>
