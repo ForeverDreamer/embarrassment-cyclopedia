@@ -53,7 +53,33 @@
         }
         ,{
             "path" : "pages/paper/paper",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "小纸条",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							// 左边
+							{
+								"color": "#FF9619",
+								"colorPressed": "#BBBBBB",
+								"float": "left",
+								"fontSize": "22px",
+								"fontSrc":"/static/font/icon.ttf",
+								"text": "\ue845"
+							},
+							// 右边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "22px",
+								"fontSrc":"/static/font/icon.ttf",
+								"text": "\ue684"
+							}
+						]
+					}
+				}
+			}
         }
         ,{
             "path" : "pages/home/home",
