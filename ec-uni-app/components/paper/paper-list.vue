@@ -1,5 +1,5 @@
 <template>
-	<view class="paper-list u-f-ac">
+	<view class="paper-list u-f-ac animated fadeInLeft fast">
 		<image :src="item.userpic" mode="widthFix" lazy-load style="border: 1rpx solid;"></image>
 		<view>
 			<view class="u-f-ac u-f-jsb">
@@ -31,7 +31,6 @@
 
 <style scoped>
 	.paper-list {
-		border: 1rpx solid;
 		border-bottom: 1rpx solid #EEEEEE;
 		padding: 20rpx 0;
 	}
@@ -43,22 +42,15 @@
 		flex-shrink: 0;
 	}
 	.paper-list>view {
-		border: 1rpx solid;
 		flex: 1;
 	}
 	.paper-list>view>view:first-child {
-		border: 1rpx solid;
 		font-size: 35rpx;
 	}
-	.paper-list>view>view:first-child>view:first-child {
-		border: 1rpx solid;
-	}
 	.paper-list>view>view:first-child>view:last-child {
-		border: 1rpx solid;
 		color: #CBCBCB;
 	}
 	.paper-list>view>view:last-child>view {
-		border: 1rpx solid;
 		color: #ADADAD;
 		font-size: 28rpx;
 	}
