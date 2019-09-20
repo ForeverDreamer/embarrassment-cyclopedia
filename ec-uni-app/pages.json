@@ -54,6 +54,7 @@
         ,{
             "path" : "pages/paper/paper",
             "style" : {
+				"enablePullDownRefresh": true,  // 开启下拉刷新
 				"navigationBarTitleText": "小纸条",
 				"app-plus": {
 					"titleNView": {
