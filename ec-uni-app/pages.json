@@ -153,6 +153,39 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/user-list/user-list",
+            "style" : {
+            	"app-plus": {
+					"animationType": "slide-in-left",  // 进场动画
+            		"scrollIndicator": "none",  //隐藏滚动条
+            		"bounce": "none",  // 关闭反弹效果
+            		"titleNView": {
+            			"autoBackButton": false,
+            			// 搜索框
+            			"searchInput": {
+            				"align": "left",
+            				"backgroundColor": "#F7F7F7",
+            				"borderRadius": "4px",
+            				"placeholder": "搜索糗事",
+            				"placeholderColor": "#CCCCCC",
+            				"disabled": false
+            			},
+            			// 按钮
+            			"buttons": [
+            				// 右边
+            				{
+            					"color": "#000000",
+            					"colorPressed": "#BBBBBB",
+            					"float": "right",
+            					"fontSize": "15px",
+            					"text": "取消"
+            				}
+            			]
+            		}
+            	}
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
