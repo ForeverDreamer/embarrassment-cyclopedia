@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="user-chat-item">
 		<view v-if="item.gstime" class="user-chat-time u-f-ajc">{{item.gstime}}</view>
 		<view class="user-chat-list u-f" :class="{'user-chat-me': item.isme}">
 			<image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></image>
@@ -25,6 +25,8 @@
 </script>
 
 <style scoped>
+	.user-chat-item {
+	}
 	.user-chat-list {
 		padding: 20rpx 0;
 	}
