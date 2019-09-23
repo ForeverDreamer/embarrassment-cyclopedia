@@ -7,6 +7,8 @@
 				<comment-list :item="item" :index="index"></comment-list>
 			</block>
 		</view>
+		<!-- 空view,抵消输入框的高度 -->
+		<view style="height: 120rpx;"></view>
 		<!-- 输入框 -->
 		<user-chat-bottom @submit="submit"></user-chat-bottom>
 	</view>
@@ -16,11 +18,13 @@
 	import detailInfo from "../../components/detail/detail-info.vue"
 	import time from "../../common/time.js"
 	import commentList from "../../components/detail/comment-list.vue"
+	import userChatBottom from "../../components/user-chat/user-chat-bottom.vue"
 
 	export default {
 		components: {
 			detailInfo,
-			commentList
+			commentList,
+			userChatBottom
 		},
 		data() {
 			return {
@@ -110,6 +114,18 @@
 				uni.setNavigationBarTitle({
 					title: obj.title
 				})
+			},
+			submit(data) {
+				// 发送逻辑
+				let obj = {
+					id: 5,
+					fid: 0,
+					userpic: "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/uni@2x.png",
+					username: "小猫咪",
+					time: time.gettime.gettime(new Date().getTime()),
+					data: data
+				};
+				this.comment.list.push(obj);
 			}
 		}
 	}
