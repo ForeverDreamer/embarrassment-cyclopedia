@@ -34,14 +34,5 @@
 </script>
 
 <style>
-	.body {
-		padding: 0 20rpx;
-	}
-	.user-set-btn {
-		width: 100%;
-		margin: 20rpx 0;
-		background: #FFE933!important;
-		color: #2E2A09!important;
-		border: 0!important;
-	}
+	@import "../../common/form.css";
 </style>
