@@ -1,8 +1,8 @@
 <template>
 	<view class="body">
-		<input type="password" v-model="oldpassword" class="uni-input common-input" placeholder="输入旧密码" />
-		<input type="password" v-model="newpassword" class="uni-input common-input" placeholder="输入新密码" />
-		<input type="password" v-model="renewpassword" class="uni-input common-input" placeholder="输入确认密码" />
+		<input type="text" password v-model="oldpassword" class="uni-input common-input" placeholder="输入旧密码" />
+		<input type="text" password v-model="newpassword" class="uni-input common-input" placeholder="输入新密码" />
+		<input type="text" password v-model="renewpassword" class="uni-input common-input" placeholder="输入确认密码" />
 		<button class="user-set-btn" 
 		:loading="loading" 
 		:class="{'user-set-btn-disable':disabled}" 
