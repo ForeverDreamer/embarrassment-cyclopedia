@@ -67,7 +67,9 @@
 		},
 		onNavigationBarButtonTap(e) {
 			if (e.index==0) {
-				console.log("跳转设置页")
+				uni.navigateTo({
+					url: '../user-set/user-set'
+				});
 			}
 		},
 		methods: {

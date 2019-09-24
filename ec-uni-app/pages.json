@@ -228,6 +228,12 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/user-set/user-set",
+            "style" : {
+				"navigationBarTitleText": "设置"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
