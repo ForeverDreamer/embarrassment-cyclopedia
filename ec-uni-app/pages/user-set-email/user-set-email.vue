@@ -47,6 +47,16 @@
 					uni.showToast({ title: '密码不能为空', icon:"none" });
 					return false;
 				}
+				// 验证邮箱格式
+				let ePattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+				if(!ePattern.test(this.email)){
+					uni.showToast({
+						title: '请输入正确邮箱格式',
+						icon:"none"
+					});
+					return false;
+				}
+				
 				return true;
 			},
 			submit() {
