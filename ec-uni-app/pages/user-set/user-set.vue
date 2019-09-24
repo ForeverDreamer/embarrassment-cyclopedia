@@ -17,13 +17,13 @@
 		data() {
 			return {
 				list: [
-					{ icon: "", name: "账号与安全"},
-					{ icon: "", name: "绑定邮箱"},
-					{ icon: "", name: "资料编辑"},
-					{ icon: "", name: "小纸条"},
-					{ icon: "", name: "清除缓存"},
-					{ icon: "", name: "意见反馈"},
-					{ icon: "", name: "关于仿糗百"}
+					{ icon: "", name: "账号与安全", clicktype: "navigateTo", url: "../../pages/user-set-repassword/user-set-repassword" },
+					{ icon: "", name: "绑定邮箱", clicktype: "", url: "" },
+					{ icon: "", name: "资料编辑", clicktype: "", url: "" },
+					{ icon: "", name: "小纸条", clicktype: "", url: "" },
+					{ icon: "", name: "清除缓存", clicktype: "", url: "" },
+					{ icon: "", name: "意见反馈", clicktype: "", url: "" },
+					{ icon: "", name: "关于仿糗百", clicktype: "", url: "" }
 				]
 			}
 		},
