@@ -11,7 +11,7 @@
 }
 .user-set-btn-disable {
 	background: #F4F4F4!important;
-	border:  1rpx solid #EEEEEE!important;
+	border:  1rpx solid #EEEEEE;
 	color: #909090!important;
 }
 .common-input {
