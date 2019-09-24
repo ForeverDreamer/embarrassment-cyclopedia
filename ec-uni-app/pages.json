@@ -83,7 +83,7 @@
 		}, {
 			"path": "pages/home/home",
 			"style": {
-				"navigationBarTitleText": "我的",
+				"navigationBarTitleText": "我",
 				"app-plus": {
 					"scrollIndicator": "none", //隐藏滚动条
 					"bounce": "none", // 关闭反弹效果

@@ -1,22 +1,33 @@
 <template>
 	<view>
-		<!-- 未登录 -->
-		<view class="u-f-ajc">登录仿糗百，体验更多功能</view>
-		<!-- 第三方登录 -->
-		<view class="other-login u-f-ajc">
-			<view class="u-f-ajc u-f1">
-				<view class="icon iconfont icon-weixin u-f-ajc"></view>
+		<template v-if="islogin">
+			<!-- 未登录 -->
+			<view class="u-f-ajc">登录仿糗百，体验更多功能</view>
+			<!-- 第三方登录 -->
+			<view class="other-login u-f-ajc">
+				<view class="u-f-ajc u-f1">
+					<view class="icon iconfont icon-weixin u-f-ajc"></view>
+				</view>
+				<view class="u-f-ajc u-f1">
+					<view class="icon iconfont icon-QQ u-f-ajc"></view>
+				</view>
+				<view class="u-f-ajc u-f1">
+					<view class="icon iconfont icon-xinlangweibo u-f-ajc"></view>
+				</view>
 			</view>
-			<view class="u-f-ajc u-f1">
-				<view class="icon iconfont icon-QQ u-f-ajc"></view>
+			<!-- 账号密码登录 -->
+			<view class="u-f-ajc">
+				账号密码登录
+				<view class="icon iconfont icon-jinru"></view>
 			</view>
-			<view class="u-f-ajc u-f1">
-				<view class="icon iconfont icon-xinlangweibo u-f-ajc"></view>
+		</template>
+		<!-- 已登录 -->
+		<view class="home-info u-f-ac">
+			<image src="../../static/demo/userpic/11.jpg" mode="widthFix" lazy-load></image>
+			<view class="u-f1">
+				<view>昵称</view>
+				<view>总访客 0 今日 0</view>
 			</view>
-		</view>
-		<!-- 账号密码登录 -->
-		<view class="u-f-ajc">
-			账号密码登录
 			<view class="icon iconfont icon-jinru"></view>
 		</view>
 		<!-- 数据 -->
@@ -46,7 +57,7 @@
 	export default {
 		data() {
 			return {
-				
+				islogin: false
 			}
 		},
 		onNavigationBarButtonTap(e) {
@@ -61,6 +72,25 @@
 </script>
 
 <style>
+	.home-info {
+		padding: 20rpx;
+	}
+	.home-info>image {
+		flex-shrink: 0;
+		width: 100rpx;
+		height: 100rpx;
+		border-radius: 100%;
+		margin-right: 15rpx;
+	}
+	.home-info>view:first-of-type>view:first-child {
+		font-size: 32rpx;
+	}
+	.home-info>view:first-of-type>view:last-child {
+		color: #BBBBBB;
+	}
+	.home-info>view:last-of-type {
+		height: 100%;
+	}
 	.other-login {
 		padding: 20rpx 80rpx;
 	}
