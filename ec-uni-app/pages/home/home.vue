@@ -1,63 +1,68 @@
 <template>
 	<view>
-		<template v-if="islogin">
+		<template v-if="!islogin">
 			<!-- 未登录 -->
 			<view class="u-f-ajc">登录仿糗百，体验更多功能</view>
 			<!-- 第三方登录 -->
-			<view class="other-login u-f-ajc">
-				<view class="u-f-ajc u-f1">
-					<view class="icon iconfont icon-weixin u-f-ajc"></view>
-				</view>
-				<view class="u-f-ajc u-f1">
-					<view class="icon iconfont icon-QQ u-f-ajc"></view>
-				</view>
-				<view class="u-f-ajc u-f1">
-					<view class="icon iconfont icon-xinlangweibo u-f-ajc"></view>
-				</view>
-			</view>
+			<other-login></other-login>
 			<!-- 账号密码登录 -->
 			<view class="u-f-ajc">
 				账号密码登录
 				<view class="icon iconfont icon-jinru"></view>
 			</view>
 		</template>
-		<!-- 已登录 -->
-		<view class="home-info u-f-ac">
-			<image src="../../static/demo/userpic/11.jpg" mode="widthFix" lazy-load></image>
-			<view class="u-f1">
-				<view>昵称</view>
-				<view>总访客 0 今日 0</view>
-			</view>
-			<view class="icon iconfont icon-jinru"></view>
-		</view>
+		<template v-else>
+			<!-- 已登录 -->
+			<home-info :homeinfo="homeinfo"></home-info>
+		</template>
 		<!-- 数据 -->
-		<view class="home-data u-f-ajc">
-			<view class="u-f1 u-f-ajc u-f-column"><view>0</view>糗事</view>
-			<view class="u-f1 u-f-ajc u-f-column"><view>0</view>动态</view>
-			<view class="u-f1 u-f-ajc u-f-column"><view>0</view>评论</view>
-			<view class="u-f1 u-f-ajc u-f-column"><view>0</view>收藏</view>
-		</view>
+		<home-data :homedata="homedata"></home-data>
 		<!-- 广告位 -->
 		<view class="home-adv u-f-ajc">
 			<image src="../../static/demo/demo20.jpg" mode="widthFix" lazy-load></image>
 		</view>
 		<!-- 功能列表 -->
 		<view class="home-list">
-			<view class="home-list-item u-f-ac u-f-jsb" hover-class="home-list-hover">
-				<view class="u-f-ac">
-					<view class="icon iconfont icon-liulan"></view>浏览历史
-				</view>
-				<view class="icon iconfont icon-jinru"></view>
-			</view>
+			<block v-for="(item, index) in list" :key="index">
+				<home-list-item :item="item" :index="index"></home-list-item>
+			</block>
 		</view>
 	</view>
 </template>
 
 <script>
+	import homeListItem from "../../components/home/home-list-item.vue"
+	import homeInfo from "../../components/home/home-info.vue"
+	import otherLogin from "../../components/home/other-login.vue"
+	import homeData from "../../components/home/home-data.vue"
+	
 	export default {
+		components: {
+			homeListItem,
+			homeInfo,
+			otherLogin,
+			homeData
+		},
 		data() {
 			return {
-				islogin: false
+				islogin: true,
+				homeinfo: {
+					userpic: "../../static/demo/userpic/11.jpg",
+					username: "昵称",
+					totalnum: 0,
+					todaynum: 0
+				},
+				homedata: [
+					{ name: "糗事", num: 0 },
+					{ name: "动态", num: 0 },
+					{ name: "评论", num: 0 },
+					{ name: "收藏", num: 0 }
+				],
+				list: [
+					{ icon: "liulan", name: "浏览历史"},
+					{ icon: "huiyuanvip", name: "糗百认证"},
+					{ icon: "keyboard", name: "审核糗事"}
+				]
 			}
 		},
 		onNavigationBarButtonTap(e) {
@@ -72,79 +77,11 @@
 </script>
 
 <style>
-	.home-info {
-		padding: 20rpx;
-	}
-	.home-info>image {
-		flex-shrink: 0;
-		width: 100rpx;
-		height: 100rpx;
-		border-radius: 100%;
-		margin-right: 15rpx;
-	}
-	.home-info>view:first-of-type>view:first-child {
-		font-size: 32rpx;
-	}
-	.home-info>view:first-of-type>view:last-child {
-		color: #BBBBBB;
-	}
-	.home-info>view:last-of-type {
-		height: 100%;
-	}
-	.other-login {
-		padding: 20rpx 80rpx;
-	}
-	.other-login>view>view {
-		width: 100rpx;
-		height: 100rpx;
-		border-radius: 100%;
-		font-size: 55rpx;
-		color: #FFFFFF;
-	}
-	.other-login .icon-weixin {
-		background: #2BD19B;
-	}
-	.other-login .icon-QQ {
-		background: #2CAEFC;
-	}
-	.other-login .icon-xinlangweibo {
-		background: #FC7729;
-	}
-	.home-data {
-		padding: 20rpx 40rpx;
-	}
-	.home-data>view {
-		color: #989898;
-	}
-	.home-data>view>view {
-		font-size: 32rpx;
-		color: #333333;
-	}
 	.home-adv {
 		padding: 20rpx;
 	}
 	.home-adv>image {
 		border-radius: 20rpx;
 		/* height: 150rpx; */
-	}
-	.home-list {
-		padding: 20rpx;
-	}
-	.home-list-item {
-		border-top: 1rpx solid #EEEEEE;
-		border-bottom: 1rpx solid #EEEEEE;
-		padding: 20rpx;
-	}
-	.home-list-hover {
-		background: #F4F4F4;
-	}
-	.home-list-item>view:first-child {
-		color: #333333;
-	}
-	.home-list-item>view:first-child>view {
-		margin-right: 10rpx;
-	}
-	.home-list-item>view:last-child {
-		color: #CCCCCC;
 	}
 </style>
