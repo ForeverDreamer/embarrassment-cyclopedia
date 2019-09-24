@@ -252,6 +252,15 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/user-set-userinfo/user-set-userinfo",
+            "style" : {
+				"navigationBarTitleText": "修改资料",
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
