@@ -23,10 +23,12 @@
 		</view>
 		<view class="user-set-userinfo-list u-f-ac u-f-jsb">
 			<view>生日</view>
-			<view class="u-f-ac">
-				<view>1987-02-07</view>
-				<view class="icon iconfont icon-bianji1"></view>
-			</view>
+			<picker mode="date" :value="birthday" :start="startDate" :end="endDate" @change="bindDateChange">
+				<view class="u-f-ac">
+					<view>{{birthday}}</view>
+					<view class="icon iconfont icon-bianji1"></view>
+				</view>
+			</picker>
 		</view>
 		<view class="user-set-userinfo-list u-f-ac u-f-jsb">
 			<view>情感</view>
@@ -49,8 +51,7 @@
 				<view class="icon iconfont icon-bianji1"></view>
 			</view>
 		</view>
-		<button class="user-set-btn" 
-		type="primary" @tap="submit">完成
+		<button class="user-set-btn" type="primary" @tap="submit">完成
 		</button>
 	</view>
 </template>
@@ -59,7 +60,7 @@
 	let sexArr = ['不限', '男', '女']
 	let qgArr = ['未婚', '已婚', '不告诉你']
 	let jobArr = ['IT', '老师', '医生', "不告诉你"]
-	
+
 	export default {
 		data() {
 			return {
@@ -67,59 +68,87 @@
 				username: "哈哈哈",
 				sex: "不限",
 				qg: "未婚",
-				job: "IT"
+				job: "IT",
+				birthday: "1987-02-07"
+			}
+		},
+		computed: {
+			startDate() {
+				return this.getDate('start');
+			},
+			endDate() {
+				return this.getDate('end');
 			}
 		},
 		methods: {
+			bindDateChange(e) {
+				this.birthday = e.target.value
+			},
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
 			// 单列选择
 			changeOne(val) {
 				let arr = [];
-				switch(val) {
+				switch (val) {
 					case 'sex':
-					arr = sexArr;
+						arr = sexArr;
 						break;
 					case 'qg':
-					arr = qgArr;
+						arr = qgArr;
 						break;
 					case 'job':
-					arr = jobArr;
+						arr = jobArr;
 						break;
 				}
 				uni.showActionSheet({
-				    itemList: arr,
-				    success: function (res) {
-						console.log(arr[res.tapIndex]);
-						switch(val) {
+					itemList: arr,
+					success: function(res) {
+						console.log("res:");
+						console.log(JSON.stringify(res));
+						switch (val) {
 							case 'sex':
-							this.sex = arr[res.tapIndex];
+								this.sex = arr[res.tapIndex];
 								break;
 							case 'qg':
-							this.qg = arr[res.tapIndex];
+								this.qg = arr[res.tapIndex];
 								break;
 							case 'job':
-							this.job = arr[res.tapIndex];
+								this.job = arr[res.tapIndex];
 								break;
 						}
-				    },
-				    fail: function (res) {
-				        console.log(res.errMsg);
-				    }
+					},
+					fail: function(res) {
+						console.log(res.errMsg);
+					}
 				});
 			},
 			// 修改头像
 			changeimg() {
 				uni.chooseImage({
-				    count: 1,
-				    sizeType: ['compressed'],
-				    success: function (res) {
-				        console.log(JSON.stringify(res.tempFilePaths));
+					count: 1,
+					sizeType: ['compressed'],
+					success: function(res) {
+						console.log(JSON.stringify(res.tempFilePaths));
 						console.log(res.tempFilePaths[0]);
 						this.userpic = res.tempFilePaths[0];
-				    }
+					}
 				});
 			},
 			submit() {
-				
+
 			}
 		}
 	}
@@ -127,23 +156,28 @@
 
 <style>
 	@import "../../common/form.css";
+
 	.user-set-userinfo-list {
 		padding: 20rpx;
 		border-bottom: 1rpx solid #F4F4F4;
 	}
+
 	.user-set-userinfo-list>view:first-child {
 		font-size: 30rpx;
 		font-weight: bold;
 		color: #9B9B9B;
 	}
+
 	.user-set-userinfo-list>view:last-child>image {
 		width: 80rpx;
 		height: 80rpx;
 		border-radius: 100%;
 	}
+
 	.user-set-userinfo-list>view:last-child>input {
 		text-align: right;
 	}
+
 	.user-set-userinfo-list>view:last-child>view:last-of-type {
 		margin-left: 20rpx;
 		color: #9B9B9B;
