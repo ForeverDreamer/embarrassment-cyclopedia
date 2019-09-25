@@ -261,6 +261,15 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/user-set-help/user-set-help",
+            "style" : {
+				"navigationBarTitleText": "意见反馈",
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

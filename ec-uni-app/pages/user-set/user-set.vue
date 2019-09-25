@@ -22,7 +22,7 @@
 					{ icon: "", name: "资料编辑", clicktype: "navigateTo", url: "../../pages/user-set-userinfo/user-set-userinfo" },
 					{ icon: "", name: "小纸条", clicktype: "", url: "" },
 					{ icon: "", name: "清除缓存", clicktype: "", url: "" },
-					{ icon: "", name: "意见反馈", clicktype: "", url: "" },
+					{ icon: "", name: "意见反馈", clicktype: "navigateTo", url: "../../pages/user-set-help/user-set-help" },
 					{ icon: "", name: "关于仿糗百", clicktype: "", url: "" }
 				]
 			}
