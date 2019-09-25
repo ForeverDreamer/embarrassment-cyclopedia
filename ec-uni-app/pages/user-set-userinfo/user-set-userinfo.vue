@@ -46,22 +46,30 @@
 		</view>
 		<view class="user-set-userinfo-list u-f-ac u-f-jsb">
 			<view>家乡</view>
-			<view class="u-f-ac">
-				<view>广东广州</view>
+			<view class="u-f-ac" @tap="showMulLinkageThreePicker">
+				<view>{{pickerText}}</view>
 				<view class="icon iconfont icon-bianji1"></view>
 			</view>
 		</view>
 		<button class="user-set-btn" type="primary" @tap="submit">完成
 		</button>
+		<mpvue-city-picker themeColor="#007AFF" ref="mpvueCityPicker" 
+		:pickerValueDefault="cityPickerValueDefault" @onConfirm="onConfirm">
+		</mpvue-city-picker>
 	</view>
 </template>
 
 <script>
+	import mpvueCityPicker from '../../components/mpvue-citypicker/mpvueCityPicker.vue'
+
 	let sexArr = ['不限', '男', '女']
 	let qgArr = ['未婚', '已婚', '不告诉你']
 	let jobArr = ['IT', '老师', '医生', "不告诉你"]
 
 	export default {
+		components: {
+			mpvueCityPicker
+		},
 		data() {
 			return {
 				userpic: "../../static/demo/userpic/11.jpg",
@@ -69,7 +77,9 @@
 				sex: "不限",
 				qg: "未婚",
 				job: "IT",
-				birthday: "1987-02-07"
+				birthday: "1987-02-07",
+				cityPickerValueDefault: [0, 0, 1],
+				pickerText: '广东省-广州市-白云区'
 			}
 		},
 		computed: {
@@ -81,6 +91,24 @@
 			}
 		},
 		methods: {
+			// 三级联动选择
+			showMulLinkageThreePicker() {
+				this.$refs.mpvueCityPicker.show()
+			},
+			onConfirm(e) {
+				this.pickerText = e.label;
+			},
+			onBackPress() {
+				if (this.$refs.mpvueCityPicker.showPicker) {
+					this.$refs.mpvueCityPicker.pickerCancel();
+					return true;
+				}
+			},
+			onUnload() {
+				if (this.$refs.mpvueCityPicker.showPicker) {
+					this.$refs.mpvueCityPicker.pickerCancel()
+				}
+			},
 			bindDateChange(e) {
 				this.birthday = e.target.value
 			},
@@ -115,9 +143,7 @@
 				}
 				uni.showActionSheet({
 					itemList: arr,
-					success: function(res) {
-						console.log("res:");
-						console.log(JSON.stringify(res));
+					success: (res) => {
 						switch (val) {
 							case 'sex':
 								this.sex = arr[res.tapIndex];
@@ -130,7 +156,7 @@
 								break;
 						}
 					},
-					fail: function(res) {
+					fail: (res) => {
 						console.log(res.errMsg);
 					}
 				});
@@ -140,9 +166,9 @@
 				uni.chooseImage({
 					count: 1,
 					sizeType: ['compressed'],
-					success: function(res) {
-						console.log(JSON.stringify(res.tempFilePaths));
-						console.log(res.tempFilePaths[0]);
+					success: (res) => {
+						// console.log(JSON.stringify(res.tempFilePaths));
+						// console.log(res.tempFilePaths[0]);
 						this.userpic = res.tempFilePaths[0];
 					}
 				});
