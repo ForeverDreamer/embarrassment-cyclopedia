@@ -86,10 +86,19 @@
 			}
 		},
 		methods: {
+			// 验证手机号码
+			isPhone(){
+				let mPattern = /^1[34578]\d{9}$/; 
+				return mPattern.test(this.phone);
+			},
 			// 获取验证码
 			getCheckNum() {
 				if (this.codetime > 0) {
 					return;
+				}
+				// 验证手机号合法性
+				if(!this.isPhone()){
+					return uni.showToast({ title: '请输入正确的手机号码', icon:"none" });
 				}
 				// 请求服务器，发送验证码
 				// 发送成功，开启倒计时
@@ -128,6 +137,14 @@
 			},
 			// 提交登录
 			submit() {
+				// 账号密码登录
+				if(!this.status){
+					return;
+				}
+				// 验证码登录
+				if(!this.isPhone()){
+					return uni.showToast({ title: '请输入正确的手机号码', icon:"none" });
+				}
 				console.log("提交登录");
 			}
 		}
