@@ -1,13 +1,26 @@
 <template>
 	<view>
-		个人空间
+		<!-- 背景图+用户基本信息 -->
+		<user-space-head :userinfo="userinfo"></user-space-head>
 	</view>
 </template>
 
 <script>
+	import userSpaceHead from "../../components/user-space/user-space-head.vue";
 	export default {
+		components: {
+			userSpaceHead
+		},
 		data() {
 			return {
+				userinfo: {
+					bgimg: 1,
+					userpic: "../../static/demo/userpic/11.jpg",
+					username: "JIA一勺",
+					sex: 0,
+					age: 20,
+					isguanzhu: false
+				}
 				
 			}
 		},
@@ -18,5 +31,7 @@
 </script>
 
 <style>
-
+	.user-space-margin {
+		margin: 15rpx 0;
+	}
 </style>
