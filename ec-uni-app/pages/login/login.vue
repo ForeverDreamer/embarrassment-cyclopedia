@@ -24,8 +24,8 @@
 				</view>
 				<view class="login-input-box">
 					<input type="text" v-model="checknum" class="uni-input common-input forget-input" placeholder="请输入验证码" />
-					<view class="forget u-f-ajc">
-						<view class="u-f-ajc yanzhengma login-font-color">获取验证码</view>
+					<view class="forget u-f-ajc" @tap="getCheckNum">
+						<view class="u-f-ajc yanzhengma login-font-color">{{!codetime?'获取验证码':codetime+' s'}}</view>
 					</view>
 				</view>
 			</template>
@@ -67,7 +67,8 @@
 				username: "",
 				password: "",
 				phone: "",
-				checknum: ""
+				checknum: "",
+				codetime: 0
 			}
 		},
 		watch: {
@@ -85,6 +86,22 @@
 			}
 		},
 		methods: {
+			// 获取验证码
+			getCheckNum() {
+				if (this.codetime > 0) {
+					return;
+				}
+				// 请求服务器，发送验证码
+				// 发送成功，开启倒计时
+				this.codetime = 10;
+				let timer=setInterval(()=>{
+					this.codetime--;
+					if(this.codetime < 1){
+						clearInterval(timer);
+						this.codetime=0;
+					}
+				},1000);
+			},
 			// 初始化表单
 			initInput() {
 				this.username = '';
