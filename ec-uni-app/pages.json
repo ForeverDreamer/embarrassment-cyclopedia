@@ -1,17 +1,6 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path" : "pages/login/login",
-			"style" : {
-				"navigationBarTitleText": "登录",
-				"app-plus": {
-					"titleNView": false,
-					"bounce": "none",
-					"scrollIndicator": "none"
-				}
-			}
-		},
-		{
 			"path": "pages/index/index",
 			"style": {
 				"app-plus": {
@@ -287,6 +276,34 @@
 				"navigationBarTitleText": "关于仿糗百",
 				"app-plus": {
 					"scrollIndicator": "none"
+				}
+			}
+        }
+		,{
+			"path" : "pages/login/login",
+			"style" : {
+				"navigationBarTitleText": "登录",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		}
+        ,{
+            "path" : "pages/user-space/user-space",
+            "style" : {
+				"navigationBarTitleText": "个人空间",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [
+							{
+								"type": "menu"
+							}
+						]
+					}
 				}
 			}
         }

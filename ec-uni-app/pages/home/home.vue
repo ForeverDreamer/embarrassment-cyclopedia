@@ -45,7 +45,7 @@
 		},
 		data() {
 			return {
-				islogin: false,
+				islogin: true,
 				homeinfo: {
 					userpic: "../../static/demo/userpic/11.jpg",
 					username: "昵称",
