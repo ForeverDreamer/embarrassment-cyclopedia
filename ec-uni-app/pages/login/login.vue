@@ -10,9 +10,9 @@
 		<view class="body">
 			<!-- 账号密码登录 -->
 			<template v-if="!status">
-				<input type="text" class="uni-input common-input" placeholder="昵称/手机号/邮箱" />
+				<input type="text" v-model="username" class="uni-input common-input" placeholder="昵称/手机号/邮箱" />
 				<view class="login-input-box">
-					<input type="text" class="uni-input common-input forget-input" placeholder="请输入密码" />
+					<input type="text" v-model="password" class="uni-input common-input forget-input" placeholder="请输入密码" />
 					<view class="forget u-f-ajc">忘记密码</view>
 				</view>
 			</template>
@@ -20,10 +20,10 @@
 			<template v-else>
 				<view class="login-input-box">
 					<view class="phone u-f-ajc">+86</view>
-					<input type="text" class="uni-input common-input phone-input" placeholder="输入手机号码" />
+					<input type="text" v-model="phone" class="uni-input common-input phone-input" placeholder="输入手机号码" />
 				</view>
 				<view class="login-input-box">
-					<input type="text" class="uni-input common-input forget-input" placeholder="请输入验证码" />
+					<input type="text" v-model="checknum" class="uni-input common-input forget-input" placeholder="请输入验证码" />
 					<view class="forget u-f-ajc">
 						<view class="u-f-ajc yanzhengma login-font-color">获取验证码</view>
 					</view>
@@ -63,12 +63,46 @@
 			return {
 				status: false,  // false账号密码登录，true手机验证码登录
 				disabled: true,
-				loading: false
+				loading: false,
+				username: "",
+				password: "",
+				phone: "",
+				checknum: ""
+			}
+		},
+		watch: {
+			username(val) {
+				this.onBtnChange();
+			},
+			password(val) {
+				this.onBtnChange();
+			},
+			phone(val) {
+				this.onBtnChange();
+			},
+			checknum(val) {
+				this.onBtnChange();
 			}
 		},
 		methods: {
+			// 初始化表单
+			initInput() {
+				this.username = '';
+				this.password = '';
+				this.phone = '';
+				this.checknum = '';
+			},
+			// 该变按钮状态
+			onBtnChange() {
+				if ( (this.username && this.password) || (this.phone && this.checknum) ) {
+					this.disabled = false;
+					return;
+				}
+				this.disabled = true;
+			},
 			// 切换登录状态
 			changeStatus() {
+				this.initInput();
 				this.status = !this.status;
 			},
 			// 返回上一步
