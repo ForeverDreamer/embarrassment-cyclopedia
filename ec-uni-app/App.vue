@@ -2,6 +2,8 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			// 网路监听（用户目前断网，切换wifi）
+			this.lib.NetWork.On();
 		},
 		onShow: function() {
 			console.log('App Show')
