@@ -132,6 +132,8 @@
 			"path": "pages/add-input/add-input",
 			"style": {
 				"app-plus": {
+					"animationType": "slide-in-bottom",
+					"animationDuration": 200,
 					// 禁止原生导航
 					"titleNView": false
 				}
@@ -149,6 +151,8 @@
 			"style": {
 				"enablePullDownRefresh": true, // 开启下拉刷新
 				"app-plus": {
+					"animationType": "slide-in-bottom",
+					"animationDuration": 200,
 					"scrollIndicator": "none", // 隐藏滚动条
 					"titleNView": {
 						"type": "transparent", // 滚动透明渐变
