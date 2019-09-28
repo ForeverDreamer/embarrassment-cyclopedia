@@ -54,7 +54,6 @@
 
 <style scoped>
 	.user-space-head {
-		border: 1rpx solid;
 		position: relative;
 		height: 500rpx;
 		overflow: hidden;
