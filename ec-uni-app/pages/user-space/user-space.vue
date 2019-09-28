@@ -30,6 +30,13 @@
 				<load-more :loadText="item.loadText"></load-more>
 			</template>
 		</block>
+		<!-- 操作菜单 -->
+		<user-space-popup 
+		:show="show" 
+		@hide="toggleShow" 
+		@lahei="lahei" 
+		@beizhu="beizhu">
+		</user-space-popup>
 	</view>
 </template>
 
@@ -40,6 +47,7 @@
 	import userSpaceUserinfo from "../../components/user-space/user-space-userinfo.vue"
 	import commonList from "../../components/common/common-list.vue";
 	import loadMore from "../../components/common/load-more.vue";
+	import userSpacePopup from "../../components/user-space/user-space-popup.vue"
 	
 	export default {
 		components: {
@@ -48,10 +56,12 @@
 			swiperTabHead,
 			userSpaceUserinfo,
 			commonList,
-			loadMore
+			loadMore,
+			userSpacePopup
 		},
 		data() {
 			return {
+				show: false,
 				userinfo: {
 					bgimg: 1,
 					userpic: "../../static/demo/userpic/11.jpg",
@@ -237,7 +247,26 @@
 			// 上拉加载
 			this.loadMore();
 		},
+		onNavigationBarButtonTap(e) {
+			if (e.index==0) {
+				this.toggleShow();
+			}
+		},
 		methods: {
+			// 操作菜单显示隐藏
+			toggleShow() {
+				this.show = !this.show
+			},
+			// 拉黑
+			lahei() {
+				console.log("拉黑");
+				this.toggleShow();
+			},
+			// 备注
+			beizhu() {
+				console.log("备注");
+				this.toggleShow();
+			},
 			loadMore() {
 				if (this.tablist[this.tabIndex].loadText != "上拉加载更多") {
 					return;
