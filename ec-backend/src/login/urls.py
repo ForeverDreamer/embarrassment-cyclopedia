@@ -3,10 +3,15 @@ from django.urls import path
 from .views import (
     SendCodeAPIView,
     CodeRegOrLoginAPIView,
+    EmailRegOrLoginAPIView,
+    ThirdRegOrLoginAPIView,
+    LogoutAPIView,
 )
 
 urlpatterns = [
     path('sendcode/', SendCodeAPIView.as_view(), name='sendcode'),
-    # 放在video-detail前面，注意url匹配顺序，否则会把create当slug匹配
-    path('CodeRegOrLogin/', CodeRegOrLoginAPIView.as_view(), name='CodeRegOrLogin'),
+    path('coderegorlogin/', CodeRegOrLoginAPIView.as_view(), name='code'),
+    path('emailregorLogin/', EmailRegOrLoginAPIView.as_view(), name='email'),
+    path('thirdparty/', ThirdRegOrLoginAPIView.as_view(), name='third'),
+    path('logout/', LogoutAPIView.as_view(), name='logout'),
 ]

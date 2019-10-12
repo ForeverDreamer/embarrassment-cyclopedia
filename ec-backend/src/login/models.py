@@ -3,6 +3,7 @@ from django.db import models
 # from django.db.models.signals import post_save
 
 from .validators import validate_mobile_phone
+from ec import config
 
 User = settings.AUTH_USER_MODEL
 
@@ -27,7 +28,7 @@ CAREER_STATUS = (
 )
 
 THIRD_PARTY_TYPE = (
-    ('wechat ', '微信'),
+    ('wechat', '微信'),
     ('microblog', '微博'),
     ('qq', 'QQ'),
     ('others', '其他'),
@@ -59,7 +60,7 @@ class Profile(models.Model):
                                  blank=True, null=True)
     # validators必须要配合ModelForm使用，后台手动操作就是通过ModelForm
     # .create()或.save()不生效：'https://stackoverflow.com/questions/40881708/django-model-validator-not-working-on-create'
-    mobile_phone = models.CharField(max_length=50, validators=[validate_mobile_phone])
+    mobile_phone = models.CharField(max_length=50, validators=[validate_mobile_phone], blank=True, null=True)
     cteate_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=True)
@@ -69,6 +70,7 @@ class Profile(models.Model):
     career = models.CharField(max_length=50, choices=CAREER_STATUS, default='secret')
     birthday = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     hometown = models.CharField(max_length=50, blank=True, null=True)
+    logout = models.BooleanField(default=False)  # 用户手动退出登录
 
     objects = ProfileManager()
 
@@ -77,7 +79,7 @@ class Profile(models.Model):
         verbose_name_plural = 'Profiles'
 
     def __str__(self):
-        return self.mobile_phone
+        return self.mobile_phone or self.owner.email
 
 
 # def user_created_receiver(sender, instance, created, *args, **kwargs):
@@ -96,18 +98,22 @@ def third_user_pic_upload(instance, filename):
 
 
 class ThirdPartyInfo(models.Model):
-    owner = models.ManyToManyField('auth.User')
+    owner = models.ForeignKey('auth.User', related_name='third', on_delete=models.CASCADE, blank=True, null=True)
     third_type = models.CharField(max_length=50, choices=THIRD_PARTY_TYPE, default='others')
     openid = models.CharField(max_length=200)
     nickname = models.CharField(max_length=50)
-    image_height = models.IntegerField(blank=True, null=True)
-    image_width = models.IntegerField(blank=True, null=True)
-    third_user_pic = models.ImageField(upload_to=third_user_pic_upload, height_field='image_height', width_field='image_width',
-                                       blank=True, null=True)
+    third_user_pic = models.CharField(max_length=200, blank=True, null=True)
+    logout = models.BooleanField(default=True)  # 用户手动退出登录
+    # image_height = models.IntegerField(blank=True, null=True)
+    # image_width = models.IntegerField(blank=True, null=True)
+    # third_user_pic = models.ImageField(upload_to=third_user_pic_upload, height_field='image_height', width_field='image_width',
+    #                                    blank=True, null=True)
 
     class Meta:
         verbose_name = 'ThirdPartyInfo'
         verbose_name_plural = 'ThirdPartyInfos'
 
     def __str__(self):
-        return self.owner.username
+        if self.owner.username == config.TEMP_USER_INFO.get('username'):
+            return 'temp_' + self.third_type
+        return self.owner.username + '_' + self.third_type
