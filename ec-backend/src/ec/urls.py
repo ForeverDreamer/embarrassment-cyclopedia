@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
@@ -40,5 +42,10 @@ urlpatterns = [
     path('login/', include(('login.urls', 'login'), namespace='login')),
     path('category/', include(('category.urls', 'category'), namespace='category')),
     path('topic/', include(('topic.urls', 'topic'), namespace='topic')),
+    path('post/', include(('post.urls', 'post'), namespace='post')),
     # re_path(r'^api/auth/$', include('rest_framework.urls', namespace='rest_framework')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
