@@ -36,8 +36,9 @@ urlpatterns = [
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('login/', include(('login.urls', 'login'), namespace='login')),
     path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
-
+    path('login/', include(('login.urls', 'login'), namespace='login')),
+    path('category/', include(('category.urls', 'category'), namespace='category')),
+    path('topic/', include(('topic.urls', 'topic'), namespace='topic')),
     # re_path(r'^api/auth/$', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'rest_framework',
     # Local apps
     'login.apps.LoginConfig',
+    'category',
+    'topic',
+    'post',
 ]
 
 MIDDLEWARE = [
