@@ -5,7 +5,6 @@ from .serializers import CategorySerializer
 
 
 class CategoryListView(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -13,3 +12,4 @@ class CategoryListView(generics.ListAPIView):
 class CategoryDetailView(generics.RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    lookup_field = 'slug'

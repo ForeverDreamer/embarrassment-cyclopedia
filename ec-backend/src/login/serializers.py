@@ -2,15 +2,31 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import Profile, ThirdPartyInfo
+from .models import Profile, ThirdLoginInfo
 from .utils import is_phone, is_veri_code, validate_password, validate_third_type
 from ec import config
 
 
-class ThirdRegOrLoginSerializer(serializers.ModelSerializer):
+class ThirdBindPhoneSerializer(serializers.Serializer):
+    openid = serializers.CharField(max_length=100)
+    mobile_phone = serializers.CharField(max_length=50)
+    veri_code = serializers.CharField(max_length=20)
+
+    def validate_mobile_phone(self, mobile_phone):
+        if not is_phone(mobile_phone):
+            raise serializers.ValidationError('请输入正确的电话号码！')
+        return mobile_phone
+
+    def validate_veri_code(self, veri_code):
+        if not is_veri_code(veri_code):
+            raise serializers.ValidationError('验证码格式错误！')
+        return veri_code
+
+
+class ThirdLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ThirdPartyInfo
+        model = ThirdLoginInfo
         fields = ['third_type', 'openid', 'nickname', 'third_user_pic']
 
     # def create(self, validated_data):
@@ -31,12 +47,12 @@ class CodeRegOrLoginSerializer(serializers.Serializer):
 
     def validate_mobile_phone(self, mobile_phone):
         if not is_phone(mobile_phone):
-            raise serializers.ValidationError('validate_mobile_phone: 手机号格式错误！')
+            raise serializers.ValidationError('手机号格式错误！')
         return mobile_phone
 
     def validate_veri_code(self, veri_code):
         if not is_veri_code(veri_code):
-            raise serializers.ValidationError('validate_veri_code: 验证码格式错误！')
+            raise serializers.ValidationError('验证码格式错误！')
         return veri_code
 
     def create(self, validated_data):
@@ -54,7 +70,7 @@ class CodeRegOrLoginSerializer(serializers.Serializer):
     #     return instance
 
 
-class EmailRegOrLoginSerializer(serializers.Serializer):
+class EmailRegSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
@@ -77,6 +93,27 @@ class EmailRegOrLoginSerializer(serializers.Serializer):
         # 创建用户信息
         Profile.objects.create(owner=user)
         return user
+
+
+class AccountLoginSerializer(serializers.Serializer):
+    mobile_phone = serializers.CharField(required=False, max_length=20)
+    email = serializers.EmailField(required=False)
+    password = serializers.CharField(max_length=50)
+
+    def validate_mobile_phone(self, mobile_phone):
+        if not is_phone(mobile_phone):
+            raise serializers.ValidationError('请输入正确的电话号码！')
+        return mobile_phone
+
+    # def validate_email(self, email):
+    #     if not is_phone(email):
+    #         raise serializers.ValidationError('validate_mobile_phone: 请输入正确的电话号码！')
+    #     return email
+
+    def validate_password(self, password):
+        if not validate_password(password):
+            raise serializers.ValidationError('密码格式错误！')
+        return password
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):

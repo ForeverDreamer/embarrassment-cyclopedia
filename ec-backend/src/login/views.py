@@ -2,7 +2,7 @@ import requests
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
-from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -14,13 +14,16 @@ from .serializers import (
     UserSerializer,
     ProfileSerializer,
     CodeRegOrLoginSerializer,
-    EmailRegOrLoginSerializer,
-    ThirdRegOrLoginSerializer,
+    EmailRegSerializer,
+    AccountLoginSerializer,
+    ThirdLoginSerializer,
+    ThirdBindPhoneSerializer,
 )
-from .models import Profile, ThirdPartyInfo
+from .models import Profile, ThirdLoginInfo
 from .utils import is_phone, get_tokens_for_user
 from ec import config
 from .permissions import IsLogin
+from . import error_code
 
 
 # 退出登录
@@ -53,57 +56,89 @@ class LogoutAPIView(APIView):
         return Response({"msg": "退出登录成功！"}, status=status.HTTP_200_OK)
 
 
-class ThirdRegOrLoginAPIView(generics.CreateAPIView):
+# 第三方登录
+class ThirdLoginAPIView(APIView):
     permission_classes = [permissions.AllowAny]
-    serializer_class = ThirdRegOrLoginSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+    def post(self, *args, **kwargs):
+        serializer = ThirdLoginSerializer(data=self.request.data)
         if not serializer.is_valid(raise_exception=False):
-            print(serializer.errors)
-            return Response({"msg": "参数格式错误!"}, status=status.HTTP_400_BAD_REQUEST)
+            # print(serializer.errors)
+            return Response({'error_code': '3000', "msg": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         data = self.request.data
-        print('data', data)
-        openid = data.get('openid')
-        third_type = data.get('third_type')
-        qs = ThirdPartyInfo.objects.all().filter(openid=openid, third_type=third_type)
-        if qs:
-            # user = qs.first().owner
-            # if not user.username == config.TEMP_USER_INFO.get('username'):
-            #     return Response({"msg": "请绑定手机后再操作！!"}, status=status.HTTP_403_FORBIDDEN)
+        qs = ThirdLoginInfo.objects.filter(openid__exact=data.get('openid'))
+        if qs.exists():
+            third_login_info = qs.first()
+            user = third_login_info.owner
+            # 用户是否绑定手机
+            if not user:
+                return Response({"msg": "用户未绑定手机，仅有游客权限!"}, status=status.HTTP_200_OK)
             # 用户是否被禁用
-            # if not user.is_active:
-            #     print('用户被禁用!')
-            #     return Response({"msg": "用户被禁用!"}, status=status.HTTP_403_FORBIDDEN)
-            # 创建token返回给客户端
-            # data = {'username': user.username, 'password': user.password}
-            token = requests.post(config.BASE_URL + '/api/auth/token/',  data=config.TEMP_USER_INFO).json()
-            return Response({'error_code': '10002', "msg": "第三方登录成功", 'data': {'token': token}},
+            if not user.is_active:
+                return Response({"msg": "用户被禁用!"}, status=status.HTTP_403_FORBIDDEN)
+            token = get_tokens_for_user(user)
+            return Response({'error_code': '10002', "msg": "账号登录成功", 'data': {'token': token}},
                             status=status.HTTP_200_OK)
         else:
-            # 创建第三方登录信息
-            # self.perform_create(serializer)
             serializer.save()
-            # 返回临时用户token
-            token = requests.post(config.BASE_URL + '/api/auth/token/', data=config.TEMP_USER_INFO).json()
-            return Response({"msg": "第三方注册成功！", 'data': {'token': token}}, status=status.HTTP_200_OK)
-
-    # def perform_create(self, serializer):
-    #     qs = User.objects.all().filter(username='no3p2jg90nv')
-    #     serializer.save(owner=qs.first())
+            return Response({"msg": "第三方登录成功，请绑定手机号！", 'error_code': '10001'}, status=status.HTTP_201_CREATED)
 
 
-# 邮箱注册或登录
-class EmailRegOrLoginAPIView(generics.CreateAPIView):
+# 第三方登录绑定手机号
+class ThirdBindPhoneAPIView(APIView):
     permission_classes = [permissions.AllowAny]
-    serializer_class = EmailRegOrLoginSerializer
+
+    def post(self, *args, **kwargs):
+        serializer = ThirdBindPhoneSerializer(data=self.request.data)
+        if not serializer.is_valid(raise_exception=False):
+            # print(serializer.errors)
+            return Response({'error_code': '3000', "msg": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        data = self.request.data
+        mobile_phone = data.get('mobile_phone')
+        # 缓存检查验证码是否一致
+        print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
+        if cache.get(mobile_phone) != data.get('veri_code'):
+            return Response({"msg": "验证码错误", 'error_code': '9999'}, status=status.HTTP_400_BAD_REQUEST)
+        # 第三方登录信息是否存在
+        third_qs = ThirdLoginInfo.objects.filter(openid__exact=data.get('openid'))
+        if not third_qs.exists():
+            return Response({'error_code': '3000', "msg": '第三方信息不存在'}, status=status.HTTP_400_BAD_REQUEST)
+        third_login_info = third_qs.first()
+        # 用户是否已存在
+        user_qs = User.objects.filter(username__exact=mobile_phone)
+        if user_qs.exists():
+            user = user_qs.first()
+            # 用户是否被禁用
+            if not user.is_active:
+                return Response({"msg": "用户被禁用!"}, status=status.HTTP_403_FORBIDDEN)
+            # 绑定第三方信息
+            third_login_info.owner = user
+            third_login_info.save()
+            token = get_tokens_for_user(user)
+            return Response({'error_code': '10002', "msg": "手机号绑定成功", 'data': {'token': token}},
+                            status=status.HTTP_200_OK)
+        else:
+            # 创建用户
+            user = User.objects.create_user(username=mobile_phone, password=config.DEFALT_PASSWORD)
+            # 创建用户信息
+            Profile.objects.create(owner=user, mobile_phone=mobile_phone)
+            # 绑定第三方信息
+            third_login_info.owner = user
+            third_login_info.save()
+            return Response({"msg": "创建并绑定成功！", 'error_code': '10001'}, status=status.HTTP_201_CREATED)
+
+
+# 邮箱注册
+class EmailRegAPIView(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = EmailRegSerializer
 
     def create(self, request, *args, **kwargs):
-        user = self.request.user
-        if user.is_authenticated:
-            user.profile.logout = False
-            user.profile.save()
-            return Response({'error_code': '10002', "msg": "邮箱登录成功"}, status=status.HTTP_200_OK)
+        # user = self.request.user
+        # if user.is_authenticated:
+        #     user.profile.logout = False
+        #     user.profile.save()
+        #     return Response({'error_code': '10002', "msg": "邮箱登录成功"}, status=status.HTTP_200_OK)
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid(raise_exception=False):
             print(serializer.errors)
@@ -138,6 +173,41 @@ class EmailRegOrLoginAPIView(generics.CreateAPIView):
             return Response({"msg": "验证邮件已发送，请登录邮箱点击验证链接！", 'error_code': '10001'}, status=status.HTTP_200_OK)
 
 
+# 账号登录(手机/邮箱)
+class AccountLoginAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, *args, **kwargs):
+        serializer = AccountLoginSerializer(data=self.request.data)
+        if not serializer.is_valid(raise_exception=False):
+            # print(serializer.errors)
+            return Response({"msg": "用户名或密码格式错误!"}, status=status.HTTP_400_BAD_REQUEST)
+        data = self.request.data
+        if data.get('mobile_phone'):
+            qs = User.objects.filter(username__exact=data.get('mobile_phone'))
+        else:
+            qs = User.objects.filter(email__exact=data.get('email'))
+        if qs.exists():
+            user = qs.first()
+            # 用户是否被禁用
+            if not user.is_active:
+                return Response({"msg": "用户被禁用!"}, status=status.HTTP_403_FORBIDDEN)
+            # 比对密码，用户登录操作
+            password = data.get('password')
+            if not user.check_password(password):
+                return Response({"msg": "用户名或密码错误", 'error_code': '10002'}, status=status.HTTP_400_BAD_REQUEST)
+            # 创建token返回给客户端
+            # headers = {'Content-Type': 'application/json'}
+            # data = {'username': user.username, 'password': password}
+            # # token = requests.post(config.BASE_URL+'/api/auth/token/', headers=headers, data=data)
+            # token = requests.post(config.BASE_URL + '/api/auth/token/', data=data).json()
+            token = get_tokens_for_user(user)
+            return Response({'error_code': '10002', "msg": "账号登录成功", 'data': {'token': token}},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({"msg": "用户不存在，请先注册！", 'error_code': '10001'}, status=status.HTTP_200_OK)
+
+
 # 发送验证码
 class SendCodeAPIView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -147,31 +217,31 @@ class SendCodeAPIView(APIView):
         mobile_phone = data.get('mobile_phone')
         # 验证手机号码格式
         if not is_phone(mobile_phone):
-            return Response({"msg": "发送验证码， 请输入正确的电话号码！", 'error_code': '9997'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(error_code.VERI_CODE.get('phone_format'), status=status.HTTP_400_BAD_REQUEST)
         print('data', data)
         # 检查验证码缓存缓存
         print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
         if cache.get(mobile_phone):
-            return Response({"msg": "您操作太频繁，请稍后再试！", 'error_code': '9999'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(error_code.VERI_CODE.get('too_often'), status=status.HTTP_400_BAD_REQUEST)
         # 调用短信服务商接口发送验证码给用户
         # print('data: ', data)
         cache.set(mobile_phone, '1314', 300)
 
-        return Response({"msg": "发送成功", 'error_code': '10000'}, status=status.HTTP_200_OK)
+        return Response(error_code.VERI_CODE.get('success'), status=status.HTTP_200_OK)
 
 
 class CodeRegOrLoginAPIView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = CodeRegOrLoginSerializer
 
-    def create(self, request, *args, **kwargs):
+    def create(self, *args, **kwargs):
         user = self.request.user
         if user.is_authenticated:
             user.profile.logout = False
             user.profile.save()
             return Response({'error_code': '10002', "msg": "手机验证码登录成功"}, status=status.HTTP_200_OK)
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid(raise_exception=False):
+        serializer = self.get_serializer(data=self.request.data)
+        if not serializer.is_valid():
             print(serializer.errors)
             return Response({"msg": "手机号或验证码格式错误!"}, status=status.HTTP_400_BAD_REQUEST)
         data = self.request.data
@@ -202,7 +272,7 @@ class CodeRegOrLoginAPIView(generics.CreateAPIView):
             token = get_tokens_for_user(user)
             print(token)
             return Response({'error_code': '10002', "msg": "手机验证码注册成功", 'data': {'token': token}},
-                            status=status.HTTP_200_OK)
+                            status=status.HTTP_201_CREATED)
 
 
 class UserViewSet(viewsets.ModelViewSet):

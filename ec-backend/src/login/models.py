@@ -1,6 +1,10 @@
+import random
+import os
+
 from django.conf import settings
 from django.db import models
 # from django.db.models.signals import post_save
+from django.utils import timezone
 
 from .validators import validate_mobile_phone
 from ec import config
@@ -93,27 +97,38 @@ class Profile(models.Model):
 # post_save.connect(user_created_receiver, sender=User)
 
 
+def get_filename_ext(filepath):
+    base_name = os.path.basename(filepath)
+    name, ext = os.path.splitext(base_name)
+    return name, ext
+
+
 def third_user_pic_upload(instance, filename):
-    return 'images/{id}/third_party_pics/{pic_name}'.format(id=instance.owner.id, pic_name=filename)
+    new_filename = random.randint(1, 3910209312)
+    name, ext = get_filename_ext(filename)
+    final_filename = '{new_filename}{ext}'.format(new_filename=new_filename, ext=ext)
+    return "images/third_login_pics/{openid}/{final_filename}".format(
+        openid=instance.openid,
+        final_filename=final_filename
+    )
 
 
-class ThirdPartyInfo(models.Model):
-    owner = models.ForeignKey('auth.User', related_name='third', on_delete=models.CASCADE, blank=True, null=True)
+class ThirdLoginInfo(models.Model):
+    owner = models.ForeignKey('auth.User', related_name='third_set', on_delete=models.CASCADE, blank=True, null=True)
     third_type = models.CharField(max_length=50, choices=THIRD_PARTY_TYPE, default='others')
     openid = models.CharField(max_length=200)
     nickname = models.CharField(max_length=50)
-    third_user_pic = models.CharField(max_length=200, blank=True, null=True)
     logout = models.BooleanField(default=True)  # 用户手动退出登录
-    # image_height = models.IntegerField(blank=True, null=True)
-    # image_width = models.IntegerField(blank=True, null=True)
-    # third_user_pic = models.ImageField(upload_to=third_user_pic_upload, height_field='image_height', width_field='image_width',
-    #                                    blank=True, null=True)
+    image_height = models.IntegerField(blank=True, null=True)
+    image_width = models.IntegerField(blank=True, null=True)
+    third_user_pic = models.ImageField(upload_to=third_user_pic_upload, height_field='image_height',
+                                       width_field='image_width',
+                                       blank=True, null=True)
+    # expires_time = models.DateTimeField(default=(timezone.now() + 7200))
 
     class Meta:
-        verbose_name = 'ThirdPartyInfo'
-        verbose_name_plural = 'ThirdPartyInfos'
+        verbose_name = 'ThirdLoginInfo'
+        verbose_name_plural = 'ThirdLoginInfos'
 
     def __str__(self):
-        if self.owner.username == config.TEMP_USER_INFO.get('username'):
-            return 'temp_' + self.third_type
-        return self.owner.username + '_' + self.third_type
+        return '_'.join([self.nickname, self.third_type])

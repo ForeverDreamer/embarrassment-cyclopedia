@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Profile, ThirdPartyInfo
+from .models import Profile, ThirdLoginInfo
 
 
 # class ThirdPartyInfoAdmin(admin.ModelAdmin):
@@ -11,6 +11,6 @@ from .models import Profile, ThirdPartyInfo
 #
 #
 # admin.site.register(ThirdPartyInfo, ThirdPartyInfoAdmin)
-admin.site.register(ThirdPartyInfo)
+admin.site.register(ThirdLoginInfo)
 
 admin.site.register(Profile)
