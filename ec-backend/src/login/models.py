@@ -1,5 +1,4 @@
 import random
-import os
 
 from django.conf import settings
 from django.db import models
@@ -8,6 +7,7 @@ from django.utils import timezone
 
 from .validators import validate_mobile_phone
 from ec import config
+from ec.utils import get_filename_ext
 
 User = settings.AUTH_USER_MODEL
 
@@ -67,7 +67,7 @@ class Profile(models.Model):
     mobile_phone = models.CharField(max_length=50, validators=[validate_mobile_phone], blank=True, null=True)
     cteate_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
-    status = models.BooleanField(default=True)
+    # status = models.BooleanField(default=True)
     gender = models.CharField(max_length=50, choices=GENDER_STATUS, default='secret')
     age = models.IntegerField(blank=True, null=True)
     emotion = models.CharField(max_length=50, choices=EMOTION_STATUS, default='secret')
@@ -97,17 +97,11 @@ class Profile(models.Model):
 # post_save.connect(user_created_receiver, sender=User)
 
 
-def get_filename_ext(filepath):
-    base_name = os.path.basename(filepath)
-    name, ext = os.path.splitext(base_name)
-    return name, ext
-
-
 def third_user_pic_upload(instance, filename):
     new_filename = random.randint(1, 3910209312)
     name, ext = get_filename_ext(filename)
     final_filename = '{new_filename}{ext}'.format(new_filename=new_filename, ext=ext)
-    return "images/third_login_pics/{openid}/{final_filename}".format(
+    return "image/third_login/{openid}/{final_filename}".format(
         openid=instance.openid,
         final_filename=final_filename
     )

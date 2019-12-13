@@ -66,6 +66,8 @@ class ThirdLoginAPIView(APIView):
             # print(serializer.errors)
             return Response({'error_code': '3000', "msg": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         data = self.request.data
+        # 先要向第三方官方发送请求，验证openid的有效性
+        # 第三方信息是否已存在
         qs = ThirdLoginInfo.objects.filter(openid__exact=data.get('openid'))
         if qs.exists():
             third_login_info = qs.first()

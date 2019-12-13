@@ -40,9 +40,7 @@ urlpatterns = [
     path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('login/', include(('login.urls', 'login'), namespace='login')),
-    path('category/', include(('category.urls', 'category'), namespace='category')),
-    path('topic/', include(('topic.urls', 'topic'), namespace='topic')),
-    path('post/', include(('post.urls', 'post'), namespace='post')),
+    path('content/', include(('content.urls', 'content'), namespace='content')),
     # re_path(r'^api/auth/$', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
