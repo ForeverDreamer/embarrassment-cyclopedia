@@ -1,4 +1,4 @@
-import random
+import uuid
 
 from django.conf import settings
 from django.db import models
@@ -53,11 +53,17 @@ class ProfileManager(models.Manager):
 
 
 def user_pic_upload(instance, filename):
-    return 'images/{id}/user_pics/{pic_name}'.format(id=instance.owner.id, pic_name=filename)
+    new_filename = uuid.uuid4()
+    name, ext = get_filename_ext(filename)
+    image_name = '{new_filename}{ext}'.format(new_filename=new_filename, ext=ext)
+    return "image/account/{username}/{image_name}".format(
+        username=instance.owner.username,
+        final_filename=image_name
+    )
 
 
 class Profile(models.Model):
-    owner = models.OneToOneField('auth.User', related_name='profile', on_delete=models.CASCADE, null=True)
+    owner = models.OneToOneField('auth.User', related_name='profile', on_delete=models.CASCADE)
     image_height = models.IntegerField(blank=True, null=True)
     image_width = models.IntegerField(blank=True, null=True)
     user_pic = models.ImageField(upload_to=user_pic_upload, height_field='image_height', width_field='image_width',
@@ -98,7 +104,7 @@ class Profile(models.Model):
 
 
 def third_user_pic_upload(instance, filename):
-    new_filename = random.randint(1, 3910209312)
+    new_filename = uuid.uuid4()
     name, ext = get_filename_ext(filename)
     final_filename = '{new_filename}{ext}'.format(new_filename=new_filename, ext=ext)
     return "image/third_login/{openid}/{final_filename}".format(
@@ -108,7 +114,7 @@ def third_user_pic_upload(instance, filename):
 
 
 class ThirdLoginInfo(models.Model):
-    owner = models.ForeignKey('auth.User', related_name='third_set', on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey('auth.User', related_name='third_set', on_delete=models.CASCADE)
     third_type = models.CharField(max_length=50, choices=THIRD_PARTY_TYPE, default='others')
     openid = models.CharField(max_length=200)
     nickname = models.CharField(max_length=50)

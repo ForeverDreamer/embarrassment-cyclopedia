@@ -72,18 +72,20 @@ class ThirdLoginAPIView(APIView):
         if qs.exists():
             third_login_info = qs.first()
             user = third_login_info.owner
-            # 用户是否绑定手机
-            if not user:
-                return Response({"msg": "用户未绑定手机，仅有游客权限!"}, status=status.HTTP_200_OK)
+            # # 用户是否绑定手机
+            # if not user:
+            #     return Response({"msg": "用户未绑定手机，仅有游客权限!"}, status=status.HTTP_200_OK)
             # 用户是否被禁用
             if not user.is_active:
                 return Response({"msg": "用户被禁用!"}, status=status.HTTP_403_FORBIDDEN)
             token = get_tokens_for_user(user)
-            return Response({'error_code': '10002', "msg": "账号登录成功", 'data': {'token': token}},
+            return Response({'error_code': '10002', "msg": "第三方登录成功", 'data': {'token': token}},
                             status=status.HTTP_200_OK)
         else:
-            serializer.save()
-            return Response({"msg": "第三方登录成功，请绑定手机号！", 'error_code': '10001'}, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            token = get_tokens_for_user(user)
+            return Response({'error_code': '10002', "msg": "第三方登录创建成功", 'data': {'token': token}},
+                            status=status.HTTP_201_CREATED)
 
 
 # 第三方登录绑定手机号
@@ -253,7 +255,7 @@ class CodeRegOrLoginAPIView(generics.CreateAPIView):
         print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
         if cache.get(mobile_phone) != data.get('veri_code'):
             return Response({"msg": "验证码错误", 'error_code': '9999'}, status=status.HTTP_400_BAD_REQUEST)
-        qs = User.objects.all().filter(username=mobile_phone)
+        qs = User.objects.filter(username=mobile_phone)
         if qs.exists():
             user = qs.first()
             # 用户是否被禁用

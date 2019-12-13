@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Topic, Post, PostImage, PostVideo
+from .models import Category, Topic, Post, PostImage, PostVideo, CATEGORY_CHOICES
 
 
 class CategoryListSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,13 +20,9 @@ class CategoryDetailSerializer(serializers.HyperlinkedModelSerializer):
         model = Category
         fields = [
             'id',
-            'url',
             'slug',
             'title',
         ]
-        extra_kwargs = {
-            'url': {'view_name': 'content:category-detail', 'lookup_field': 'slug'},
-        }
 
 
 # class CategorySerializer(serializers.ModelSerializer):
@@ -43,31 +39,40 @@ class CategoryDetailSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class TopicListSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Topic
-        fields = [
-            'title',
-            'desc',
-        ]
-
-
-class TopicDetailSerializer(serializers.HyperlinkedModelSerializer):
     category = serializers.CharField(source='category.title', read_only=True)
 
     class Meta:
         model = Topic
         fields = [
-            'id',
+            'url',
             'title',
-            'category',
             'desc',
+            'category',
         ]
         extra_kwargs = {
-            'url': {'view_name': 'content:topic-detail', 'lookup_field': 'slug'},
+            'url': {'view_name': 'content:topic-detail'},
         }
 
 
+class TopicDetailSerializer(serializers.HyperlinkedModelSerializer):
+    category = serializers.CharField(source='category.title', read_only=True)
+    title = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Topic
+        fields = [
+            'title',
+            'desc',
+            'category',
+        ]
+
+    def get_title(self, obj):
+        return obj.title
+
+
 class PostListSerializer(serializers.HyperlinkedModelSerializer):
+    title = serializers.SerializerMethodField()
+
     class Meta:
         model = Post
         fields = [
@@ -79,6 +84,9 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
             'post_type',
             'category',
         ]
+
+    def get_title(self, obj):
+        return obj.title
 
 
 class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
@@ -99,10 +107,42 @@ class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            # 'id',
+            'desc',
+            'location',
+            'category',
+            'post_type',
+        ]
+        # read_only_fields = ['id']
+
+    # def validate_category(self, category):
+    #     # for slug, _ in CATEGORY_CHOICES:
+    #     #     if category == slug:
+    #     #         return category
+    #     # qs = Category.objects.filter(id=category_id)
+    #     # if qs.exists():
+    #     #     return ca
+    #     print(category)
+    #     raise serializers.ValidationError('类别不存在！')
+
+
 class PostImageSerializer(serializers.ModelSerializer):
+    # post = PostCreateSerializer()
+
     class Meta:
         model = PostImage
-        fields = ['post', 'image']
+        fields = ['image', 'post']
+
+    # def create(self, validated_data):
+    #     # post_data = validated_data.pop('post')
+    #     print(self.context.get('post'))
+    #     # post = Post.objects.create(**post_data)
+    #     post_img = PostImage.objects.create(post=self.context.get('post'), **validated_data)
+    #     return post_img
 
 
 class PostVideoSerializer(serializers.ModelSerializer):

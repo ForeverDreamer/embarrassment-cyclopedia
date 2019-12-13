@@ -29,16 +29,13 @@ class ThirdLoginSerializer(serializers.ModelSerializer):
         model = ThirdLoginInfo
         fields = ['third_type', 'openid', 'nickname', 'third_user_pic']
 
-    # def create(self, validated_data):
-    #     # 获取临时用户
-    #     qs = User.objects.all().filter(username=config.TEMP_USER_INFO.get('username'))
-    #     owner = qs.first()
-    #
-    #     # 创建第三方登录信息
-    #     third_party_info = ThirdPartyInfo.objects.create(**validated_data)
-    #     # 创建用户资料信息
-    #     profile = Profile.objects.create()
-    #     return third_party_info
+    def create(self, validated_data):
+        # 获取临时用户
+        tmp_user, created = User.objects.get_or_create(username=config.TEMP_USER_INFO.get('username'),
+                                                       password=config.TEMP_USER_INFO.get('password'))
+        # 创建第三方登录信息
+        ThirdLoginInfo.objects.create(owner=tmp_user, **validated_data)
+        return tmp_user
 
 
 class CodeRegOrLoginSerializer(serializers.Serializer):
