@@ -94,8 +94,16 @@ class PostUploadFileView(APIView):
         qs = Post.objects.filter(id=post_id)
         if not qs.exists():
             return Response({'msg': 'post未创建'}, status=status.HTTP_400_BAD_REQUEST)
+        post = qs.first()
+        if not self.request.user == post.user:
+            return Response({'msg': '用户不一致'}, status=status.HTTP_400_BAD_REQUEST)
+        if not post_type == post.post_type:
+            return Response({'msg': 'post_type不一致'}, status=status.HTTP_400_BAD_REQUEST)
         file_serializer.context['post'] = qs.first()
         file_urls = file_serializer.save()
+        post.active = True
+        post.title_pic = file_urls[0]
+        post.save()
         return Response({'msg': '文件上传成功!', 'file_urls': file_urls}, status=status.HTTP_201_CREATED)
 
 #

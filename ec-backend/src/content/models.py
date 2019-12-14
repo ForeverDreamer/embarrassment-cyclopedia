@@ -96,29 +96,33 @@ class PostManager(models.Manager):
         return PostQuerySet(self.model, using=self._db)
 
     def all(self):
-        return self.get_queryset().all().active()
+        return self.get_queryset().active()
 
 
 class Post(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     # title = models.CharField(max_length=120)
     desc = models.TextField()
-    title_pic = models.CharField(max_length=120)
+    title_pic = models.CharField(max_length=120, null=True, blank=True)
     # article = models.ForeignKey(Article, null=True, blank=True, on_delete=models.SET_NULL)
     location = models.CharField(max_length=50)
     post_type = models.CharField(max_length=10, choices=POST_TYPE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     topic = models.ManyToManyField(Topic, null=True, blank=True)
-    public = models.BooleanField(default=True)
+    public = models.BooleanField()
     like = models.IntegerField(default=0)
     unlike = models.IntegerField(default=0)
     share = models.IntegerField(default=0)
     share_post = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=False)
     updated = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = PostManager()
+
+    class Meta:
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
 
     # def __str__(self):
     #     return self.id
@@ -126,6 +130,11 @@ class Post(models.Model):
     @property
     def title(self):
         return self.desc[:10]
+
+    # TypeError: 'RelatedManager' object is not subscriptable
+    # @property
+    # def title_pic(self):
+    #     return self.postimage_set[0]
 
 
 class CommentQuerySet(models.query.QuerySet):

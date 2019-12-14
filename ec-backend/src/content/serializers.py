@@ -45,6 +45,7 @@ class TopicListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Topic
         fields = [
+            'id',
             'url',
             'title',
             'desc',
@@ -71,8 +72,24 @@ class TopicDetailSerializer(serializers.HyperlinkedModelSerializer):
         return obj.title
 
 
+class PostImageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PostImage
+        fields = ['image']
+
+
+class PostVideoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PostVideo
+        fields = ['video']
+
+
 class PostListSerializer(serializers.HyperlinkedModelSerializer):
+    nickname = serializers.CharField(source='user.profile.nickname', read_only=True)
     title = serializers.SerializerMethodField()
+    category = serializers.CharField(source='category.title', read_only=True)
+    # postimage_set = PostImageSerializer(many=True, read_only=True)
+    # postvideo_set = PostVideoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
@@ -87,29 +104,44 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
             'like',
             'unlike',
             'share',
-            'share_post'
         ]
+        extra_kwargs = {
+            'url': {'view_name': 'content:post-detail'},
+        }
 
     def get_title(self, obj):
         return obj.title
 
+    # def get_title_pic(self, obj):
+    #     return self.postimage_set[0]
+
+    # peError: 'RelatedManager' object is not subscriptable
+    # def get_title_pic(self, obj):
+    #     return obj.postimage_set[0]
+
 
 class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
     nickname = serializers.CharField(source='user.profile.nickname', read_only=True)
+    category = serializers.CharField(source='category.title', read_only=True)
+    title = serializers.SerializerMethodField()
+    postimage_set = PostImageSerializer(many=True, read_only=True)
+    postvideo_set = PostVideoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = [
             'nickname',
             'title',
-            'title_pic',
             'location',
             'post_type',
-            'share_post'
+            'share_post',
             'category',
             'postimage_set',
             'postvideo_set',
         ]
+
+    def get_title(self, obj):
+        return obj.title
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
@@ -120,7 +152,9 @@ class PostCreateSerializer(serializers.ModelSerializer):
             'desc',
             'location',
             'category',
+            'topic',
             'post_type',
+            'public',
         ]
         # read_only_fields = ['id']
 
