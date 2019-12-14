@@ -25,7 +25,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from login import views
+from account import views
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -39,7 +39,7 @@ urlpatterns = [
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('login/', include(('login.urls', 'login'), namespace='login')),
+    path('account/', include(('account.urls', 'account'), namespace='account')),
     path('content/', include(('content.urls', 'content'), namespace='content')),
     # re_path(r'^api/auth/$', include('rest_framework.urls', namespace='rest_framework')),
 ]

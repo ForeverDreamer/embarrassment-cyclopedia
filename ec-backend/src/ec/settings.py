@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     # Third apps
     'rest_framework',
     # Local apps
-    'login.apps.LoginConfig',
+    'account.apps.AccountConfig',
     'content',
 ]
 

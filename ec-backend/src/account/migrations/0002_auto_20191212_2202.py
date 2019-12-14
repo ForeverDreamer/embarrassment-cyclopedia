@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import login.models
+import account.models
 
 
 class Migration(migrations.Migration):
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('logout', models.BooleanField(default=True)),
                 ('image_height', models.IntegerField(blank=True, null=True)),
                 ('image_width', models.IntegerField(blank=True, null=True)),
-                ('third_user_pic', models.ImageField(blank=True, height_field='image_height', null=True, upload_to=login.models.third_user_pic_upload, width_field='image_width')),
+                ('third_user_pic', models.ImageField(blank=True, height_field='image_height', null=True, upload_to=account.models.third_user_pic_upload, width_field='image_width')),
                 ('owner', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='third_set', to=settings.AUTH_USER_MODEL)),
             ],
             options={

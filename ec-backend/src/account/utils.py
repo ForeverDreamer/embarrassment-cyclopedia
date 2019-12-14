@@ -25,7 +25,9 @@ def is_veri_code(veri_code):
     return True
 
 
-def validate_email(email):
+def validate_openid(openid):
+    if len(openid) < 30:
+        return False
     return True
 
 

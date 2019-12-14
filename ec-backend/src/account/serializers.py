@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import Profile, ThirdLoginInfo
-from .utils import is_phone, is_veri_code, validate_password, validate_third_type
+from .utils import is_phone, is_veri_code, validate_password, validate_openid
 from ec import config
 
 
@@ -28,6 +28,11 @@ class ThirdLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThirdLoginInfo
         fields = ['third_type', 'openid', 'nickname', 'third_user_pic']
+
+    def validate_openid(self, openid):
+        if not validate_openid(openid):
+            raise serializers.ValidationError('openid格式错误！')
+        return openid
 
     def create(self, validated_data):
         # 获取临时用户

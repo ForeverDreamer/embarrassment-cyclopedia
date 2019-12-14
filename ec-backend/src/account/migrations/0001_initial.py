@@ -3,8 +3,8 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import login.models
-import login.validators
+import account.models
+import account.validators
 
 
 class Migration(migrations.Migration):
@@ -38,8 +38,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('image_height', models.IntegerField(blank=True, null=True)),
                 ('image_width', models.IntegerField(blank=True, null=True)),
-                ('user_pic', models.ImageField(blank=True, height_field='image_height', null=True, upload_to=login.models.user_pic_upload, width_field='image_width')),
-                ('mobile_phone', models.CharField(blank=True, max_length=50, null=True, validators=[login.validators.validate_mobile_phone])),
+                ('user_pic', models.ImageField(blank=True, height_field='image_height', null=True, upload_to=account.models.user_pic_upload, width_field='image_width')),
+                ('mobile_phone', models.CharField(blank=True, max_length=50, null=True, validators=[account.validators.validate_mobile_phone])),
                 ('cteate_time', models.DateTimeField(auto_now_add=True)),
                 ('update_time', models.DateTimeField(auto_now=True)),
                 ('status', models.BooleanField(default=True)),
