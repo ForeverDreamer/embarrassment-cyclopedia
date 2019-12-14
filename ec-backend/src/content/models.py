@@ -4,6 +4,7 @@ from django.db import models
 
 from ec.utils import get_filename_ext
 
+
 POST_TYPE = (
     ('image', '图文'),
     ('video', '视频'),
@@ -119,8 +120,8 @@ class Post(models.Model):
 
     objects = PostManager()
 
-    def __str__(self):
-        return self.title
+    # def __str__(self):
+    #     return self.id
 
     @property
     def title(self):
@@ -173,7 +174,7 @@ class PostImage(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.image.name
+        return str(self.image)
 
 
 def post_video_upload(instance, filename):
@@ -190,4 +191,4 @@ class PostVideo(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.image.name
+        return str(self.video)

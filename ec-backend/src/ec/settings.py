@@ -128,6 +128,7 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_in_env", "static_r
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_in_env", "media_root")
+VIDEO_TYPES = ('video/mp4', 'video/x-flv', 'video/x-msvideo', 'video/quicktime', 'video/x-ms-wmv')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

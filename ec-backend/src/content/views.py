@@ -4,8 +4,8 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Category, Topic, Post
-from .permissions import IsBindPhone
+from .models import Category, Topic, Post, POST_TYPE
+from ec.permissions import IsBindPhone, IsOwnerOrReadOnly
 from .serializers import (
     CategoryListSerializer,
     CategoryDetailSerializer,
@@ -57,10 +57,10 @@ class PostListView(generics.ListAPIView):
     serializer_class = PostListSerializer
 
 
-class PostDetailView(generics.RetrieveAPIView):
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-    lookup_field = 'slug'
 
 
 class PostCreateView(generics.CreateAPIView):
@@ -76,51 +76,36 @@ class PostCreateView(generics.CreateAPIView):
                         status=status.HTTP_201_CREATED)
 
 
-class PostUploadImageView(APIView):
+class PostUploadFileView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsBindPhone]
     parser_class = (FileUploadParser,)
 
     def post(self, *args, **kwargs):
-        img_serializer = PostImageSerializer(data=self.request.data)
-        if not img_serializer.is_valid():
-            return Response(img_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        img_serializer.save()
-        # qs = Post.objects.filter(id=post_data.get('id'))
-        # if qs.exists():
-        #     post = qs.first()
-        # else:
-        #     post = Post.objects.create(user=self.request.user, post_type='image', **post_data)
-        # serializer.save(context={'post': post})
-        return Response({'msg': '图片上传成功!'}, status=status.HTTP_201_CREATED)
-        #
-        # if image_serializer.is_valid():
-        #     image_serializer.save()
-        #     return Response(image_serializer.data, status=status.HTTP_201_CREATED)
-        # else:
-        #     return Response(image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        post_type = self.request.data.get('post_type')
+        if post_type == POST_TYPE[0][0]:
+            file_serializer = PostImageSerializer(data=self.request.data)
+        elif post_type == POST_TYPE[1][0]:
+            file_serializer = PostVideoSerializer(data=self.request.data)
+        else:
+            return Response({'msg': 'post_type错误'}, status=status.HTTP_400_BAD_REQUEST)
+        if not file_serializer.is_valid():
+            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        post_id = file_serializer.validated_data.get('post_id')
+        qs = Post.objects.filter(id=post_id)
+        if not qs.exists():
+            return Response({'msg': 'post未创建'}, status=status.HTTP_400_BAD_REQUEST)
+        file_serializer.context['post'] = qs.first()
+        file_urls = file_serializer.save()
+        return Response({'msg': '文件上传成功!', 'file_urls': file_urls}, status=status.HTTP_201_CREATED)
 
-    # post_id = request.data.get('post')
-        # images = request.data.get('images')
-        # for _, img in images:
-        #     data = {
-        #         'post': post_id,
-        #         'image': img
-        #     }
-        #     file_serializer = PostImageSerializer(data=data)
-        #
-        #     if file_serializer.is_valid():
-        #         file_serializer.save()
-        #     else:
-        #         return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # return Response({'msg': '图片上传成功！'}, status=status.HTTP_201_CREATED)
-
-
-class PostUploadVideoView(APIView):
-    parser_class = (FileUploadParser,)
-
-    def post(self, request, *args, **kwargs):
-        video_serializer = PostVideoSerializer(data=request.data)
-        if not video_serializer.is_valid():
-            return Response(video_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        video_serializer.save()
-        return Response({'msg': '视频上传成功!'}, status=status.HTTP_201_CREATED)
+#
+# class PostUploadVideoView(APIView):
+#     permission_classes = [permissions.IsAuthenticated, IsBindPhone]
+#     parser_class = (FileUploadParser,)
+#
+#     def post(self, request, *args, **kwargs):
+#         video_serializer = PostVideoSerializer(data=request.data)
+#         if not video_serializer.is_valid():
+#             return Response(video_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         video_serializer.save()
+#         return Response({'msg': '视频上传成功!'}, status=status.HTTP_201_CREATED)

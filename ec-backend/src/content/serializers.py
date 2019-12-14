@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models import Category, Topic, Post, PostImage, PostVideo, CATEGORY_CHOICES
+from .models import Category, Topic, Post, PostImage, PostVideo
+from .validators import validate_file_type
 
 
 class CategoryListSerializer(serializers.HyperlinkedModelSerializer):
@@ -83,6 +84,10 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
             'location',
             'post_type',
             'category',
+            'like',
+            'unlike',
+            'share',
+            'share_post'
         ]
 
     def get_title(self, obj):
@@ -100,8 +105,8 @@ class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
             'title_pic',
             'location',
             'post_type',
+            'share_post'
             'category',
-            'article',
             'postimage_set',
             'postvideo_set',
         ]
@@ -130,22 +135,49 @@ class PostCreateSerializer(serializers.ModelSerializer):
     #     raise serializers.ValidationError('类别不存在！')
 
 
-class PostImageSerializer(serializers.ModelSerializer):
+class PostImageSerializer(serializers.Serializer):
     # post = PostCreateSerializer()
+    post_id = serializers.CharField(max_length=20)
+    file_list = serializers.ListField(child=serializers.ImageField())
 
-    class Meta:
-        model = PostImage
-        fields = ['image', 'post']
+    # class Meta:
+    #     model = PostImage
+    #     fields = ['post', 'image']
 
-    # def create(self, validated_data):
-    #     # post_data = validated_data.pop('post')
-    #     print(self.context.get('post'))
-    #     # post = Post.objects.create(**post_data)
-    #     post_img = PostImage.objects.create(post=self.context.get('post'), **validated_data)
-    #     return post_img
+    def create(self, validated_data):
+        image_list = validated_data.get('file_list')
+        post = self.context.get('post')
+        # post_data = validated_data.pop('post')
+        print(self.context.get('post'))
+        # post = Post.objects.create(**post_data)
+        image_urls = []
+        for image in image_list:
+            post_img = PostImage.objects.create(post=post, image=image)
+            image_urls.append(str(post_img))
+        return image_urls
 
 
-class PostVideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostVideo
-        fields = ['post', 'video']
+class PostVideoSerializer(serializers.Serializer):
+    post_id = serializers.CharField(max_length=20)
+    file_list = serializers.ListField(child=serializers.FileField(validators=[validate_file_type]))
+
+    # def validate_file_type(upload):
+    #     # Make uploaded file accessible for analysis by saving in tmp
+    #     tmp_path = '{tmp_dir}/{filename}'.format(tmp_dir=TEMP_DIR, filename=upload.name[2:])
+    #     default_storage.save(tmp_path, ContentFile(upload.file.read()))
+    #     full_tmp_path = os.path.join(settings.MEDIA_ROOT, tmp_path)
+    #     # Get MIME type of file using python-magic and then delete
+    #     file_type = magic.from_file(full_tmp_path, mime=True)
+    #     default_storage.delete(tmp_path)
+    #     # Raise validation error if uploaded file is not an acceptable form of media
+    #     if file_type not in settings.IMAGE_TYPES and file_type not in settings.VIDEO_TYPES:
+    #         raise serializers.ValidationError('File type not supported. JPEG, PNG, or MP4 recommended.')
+
+    def create(self, validated_data):
+        video_list = validated_data.get('file_list')
+        post = self.context.get('post')
+        video_urls = []
+        for video in video_list:
+            post_video = PostVideo.objects.create(post=post, video=video)
+            video_urls.append(str(post_video))
+        return video_urls
