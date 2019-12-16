@@ -72,6 +72,10 @@ class PostCreateView(generics.CreateAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         post = serializer.save(user=self.request.user)
+        share_post = serializer.validated_data.get('share_post')
+        if share_post:
+            post.active = True
+            post.save()
         return Response({'error_code': '10002', "msg": "手机验证码注册成功", 'data': {'post_id': post.id}},
                         status=status.HTTP_201_CREATED)
 

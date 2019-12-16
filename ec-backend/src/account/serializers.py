@@ -103,8 +103,8 @@ class AccountLoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=50)
 
     def validate_mobile_phone(self, mobile_phone):
-        if not is_phone(mobile_phone):
-            raise serializers.ValidationError('请输入正确的电话号码！')
+        # if not is_phone(mobile_phone):
+        #     raise serializers.ValidationError('请输入正确的电话号码！')
         return mobile_phone
 
     # def validate_email(self, email):

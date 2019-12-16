@@ -12,12 +12,12 @@ POST_TYPE = (
 )
 
 CATEGORY_CHOICES = (
-    ('follow ', '关注'),
+    ('follow', '关注'),
     ('recommends', '推荐'),
     ('sports', '体育'),
-    ('hot ', '热点'),
+    ('hot', '热点'),
     ('finance', '财经'),
-    ('share', '娱乐'),
+    ('entertainment', '娱乐'),
 )
 
 
@@ -113,7 +113,7 @@ class Post(models.Model):
     like = models.IntegerField(default=0)
     unlike = models.IntegerField(default=0)
     share = models.IntegerField(default=0)
-    share_post = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
+    share_post = models.ManyToManyField('self', null=True, blank=True)
     active = models.BooleanField(default=False)
     updated = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Topic, Post, PostImage, PostVideo
+from .models import Category, Topic, Post, PostImage, PostVideo, POST_TYPE
 from .validators import validate_file_type
 
 
@@ -120,7 +120,7 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
     #     return obj.postimage_set[0]
 
 
-class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
+class PostDetailSerializer(serializers.ModelSerializer):
     nickname = serializers.CharField(source='user.profile.nickname', read_only=True)
     category = serializers.CharField(source='category.title', read_only=True)
     title = serializers.SerializerMethodField()
@@ -154,9 +154,15 @@ class PostCreateSerializer(serializers.ModelSerializer):
             'category',
             'topic',
             'post_type',
+            'share_post',
             'public',
         ]
         # read_only_fields = ['id']
+
+    def validate(self, data):
+        if data['post_type'] == POST_TYPE[2][0] and len(data['share_post']) == 0:
+            raise serializers.ValidationError("分享文章id缺失")
+        return data
 
     # def validate_category(self, category):
     #     # for slug, _ in CATEGORY_CHOICES:
@@ -167,6 +173,13 @@ class PostCreateSerializer(serializers.ModelSerializer):
     #     #     return ca
     #     print(category)
     #     raise serializers.ValidationError('类别不存在！')
+
+    # def create(self, validated_data):
+    #     share_post = validated_data.get('share_post')
+    #     if share_post:
+    #         validated_data['active'] = True
+    #     post = Post.objects.create(**validated_data)
+    #     return post
 
 
 class PostImageSerializer(serializers.Serializer):

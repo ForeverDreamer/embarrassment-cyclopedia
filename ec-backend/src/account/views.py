@@ -224,9 +224,9 @@ class SendCodeAPIView(APIView):
         # 验证手机号码格式
         if not is_phone(mobile_phone):
             return Response(error_code.VERI_CODE.get('phone_format'), status=status.HTTP_400_BAD_REQUEST)
-        print('data', data)
-        # 检查验证码缓存缓存
-        print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
+        # print('data', data)
+        # # 检查验证码缓存缓存
+        # print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
         if cache.get(mobile_phone):
             return Response(error_code.VERI_CODE.get('too_often'), status=status.HTTP_400_BAD_REQUEST)
         # 调用短信服务商接口发送验证码给用户
@@ -241,20 +241,20 @@ class CodeRegOrLoginAPIView(generics.CreateAPIView):
     serializer_class = CodeRegOrLoginSerializer
 
     def create(self, *args, **kwargs):
-        user = self.request.user
-        if user.is_authenticated:
-            user.profile.logout = False
-            user.profile.save()
-            return Response({'error_code': '10002', "msg": "手机验证码登录成功"}, status=status.HTTP_200_OK)
+        # user = self.request.user
+        # if user.is_authenticated:
+        #     user.profile.logout = False
+        #     user.profile.save()
+        #     return Response({'error_code': '10002', "msg": "手机验证码登录成功"}, status=status.HTTP_200_OK)
         serializer = self.get_serializer(data=self.request.data)
         if not serializer.is_valid():
-            print(serializer.errors)
+            # print(serializer.errors)
             return Response({"msg": "手机号或验证码格式错误!"}, status=status.HTTP_400_BAD_REQUEST)
         data = self.request.data
-        print('data', data)
+        # print('data', data)
         mobile_phone = data.get('mobile_phone')
         # 缓存检查验证码是否一致
-        print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
+        # print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
         if cache.get(mobile_phone) != data.get('veri_code'):
             return Response({"msg": "验证码错误", 'error_code': '9999'}, status=status.HTTP_400_BAD_REQUEST)
         qs = User.objects.filter(username=mobile_phone)
@@ -268,7 +268,7 @@ class CodeRegOrLoginAPIView(generics.CreateAPIView):
             # print('data', data)
             # token = requests.post(config.BASE_URL + '/api/auth/token/', data=data).json()
             token = get_tokens_for_user(user)
-            print(token)
+            # print(token)
             user.profile.logout = False
             user.profile.save()
             return Response({'error_code': '10002', "msg": "手机验证码登录成功", 'data': {'token': token}},
@@ -276,7 +276,7 @@ class CodeRegOrLoginAPIView(generics.CreateAPIView):
         else:
             user = serializer.save()
             token = get_tokens_for_user(user)
-            print(token)
+            # print(token)
             return Response({'error_code': '10002', "msg": "手机验证码注册成功", 'data': {'token': token}},
                             status=status.HTTP_201_CREATED)
 
