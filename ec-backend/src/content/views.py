@@ -4,9 +4,11 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Category, Topic, Post, POST_TYPE, CATEGORY_CHOICES
 from ec.permissions import IsBindPhone, IsOwnerOrReadOnly, IsSuperUser
+from .filters import PostFilter
 from .serializers import (
     CategoryListSerializer,
     CategoryDetailSerializer,
@@ -76,12 +78,19 @@ class TopicDetailView(generics.RetrieveAPIView):
 class PostListView(generics.ListAPIView):
     # queryset = Post.objects.all()
     serializer_class = PostListSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['category__slug', 'user__profile__nickname']
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['category__title', 'user__profile__nickname']
+    ordering_fields = ["title"]
+    filter_class = PostFilter
+    filterset_fields = ['post_type']
 
     def get_queryset(self):
         topic = self.request.query_params.get('topic')
-        qs = Post.objects.by_topic(topic)
+        if topic:
+            qs = Post.objects.by_topic(topic)
+        else:
+            qs = Post.objects.all()
         return qs
 
 

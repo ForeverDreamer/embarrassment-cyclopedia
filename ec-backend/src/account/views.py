@@ -117,6 +117,7 @@ class ThirdBindPhoneAPIView(APIView):
             # 用户是否被禁用
             if not user.is_active:
                 return Response({"msg": "用户被禁用!"}, status=status.HTTP_403_FORBIDDEN)
+            # 该手机是否已绑定第三方信息
             # 绑定第三方信息
             third_login_info.owner = user
             third_login_info.save()

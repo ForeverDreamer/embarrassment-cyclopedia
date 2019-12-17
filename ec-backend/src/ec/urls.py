@@ -41,6 +41,7 @@ urlpatterns = [
     path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('account/', include(('account.urls', 'account'), namespace='account')),
     path('content/', include(('content.urls', 'content'), namespace='content')),
+    path('ad/', include(('ad.urls', 'ad'), namespace='ad')),
     # re_path(r'^api/auth/$', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
