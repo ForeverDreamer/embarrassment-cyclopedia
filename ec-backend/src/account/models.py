@@ -62,8 +62,14 @@ def user_pic_upload(instance, filename):
     )
 
 
+# def nickname_default():
+#     # return ''.join()
+#     return '1314520'
+
+
 class Profile(models.Model):
     owner = models.OneToOneField('auth.User', related_name='profile', on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=50, unique=True)
     image_height = models.IntegerField(blank=True, null=True)
     image_width = models.IntegerField(blank=True, null=True)
     user_pic = models.ImageField(upload_to=user_pic_upload, height_field='image_height', width_field='image_width',

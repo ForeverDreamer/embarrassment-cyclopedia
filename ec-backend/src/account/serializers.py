@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.models import User
 
 from rest_framework import serializers
@@ -62,7 +64,14 @@ class CodeRegOrLoginSerializer(serializers.Serializer):
         # 创建用户
         user = User.objects.create_user(username=mobile_phone, password=config.DEFALT_PASSWORD)
         # 创建用户信息
-        Profile.objects.create(owner=user, mobile_phone=mobile_phone)
+        nickname = str(random.randint(1111111111, 9999999999))
+        nickname = ''.join(['用户_', nickname])
+        qs = Profile.objects.filter(nickname=nickname)
+        while qs.exists():
+            nickname = str(random.randint(1111111111, 9999999999))
+            nickname = ''.join(['用户_', nickname])
+            qs = Profile.objects.filter(nickname=nickname)
+        Profile.objects.create(owner=user, nickname=nickname, mobile_phone=mobile_phone)
         return user
 
     # def update(self, instance, validated_data):

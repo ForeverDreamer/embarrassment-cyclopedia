@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third apps
     'rest_framework',
+    'django_filters',
     # Local apps
     'account.apps.AccountConfig',
     'content',
@@ -140,6 +141,10 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'SEARCH_PARAM': 'q',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 

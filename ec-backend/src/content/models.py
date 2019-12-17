@@ -51,9 +51,9 @@ class TopicQuerySet(models.query.QuerySet):
     def active(self):
         return self.filter(active=True)
 
-    def by_category(self, sub):
-        qs = self.filter(category__slug=sub)
-        return qs
+    # def by_category(self, sub):
+    #     qs = self.filter(category__slug=sub)
+    #     return qs
 
 
 class TopicManager(models.Manager):
@@ -63,11 +63,11 @@ class TopicManager(models.Manager):
     def all(self):
         return self.get_queryset().active()
 
-    def by_category(self, category):
-        if category:
-            return self.all().by_category(category)
-        else:
-            return self.all()
+    # def by_category(self, category):
+    #     if category:
+    #         return self.all().by_category(category)
+    #     else:
+    #         return self.all()
 
 
 class Topic(models.Model):
@@ -90,13 +90,31 @@ class PostQuerySet(models.query.QuerySet):
     def active(self):
         return self.filter(active=True)
 
+    def public(self):
+        return self.filter(public=True)
+
+    def by_user(self, user):
+        qs = self.filter(user=user)
+        return qs
+
+    def by_topic(self, topic):
+        qs = self.filter(topic__title__icontains=topic)
+        return qs.distinct()
+
 
 class PostManager(models.Manager):
     def get_queryset(self):
         return PostQuerySet(self.model, using=self._db)
 
     def all(self):
-        return self.get_queryset().active()
+        return self.get_queryset().active().public()
+
+    def by_user(self, user):
+        return self.get_queryset().active().by_user(user)
+
+    def by_topic(self, topic):
+        qs = self.get_queryset().active().by_topic(topic)
+        return qs
 
 
 class Post(models.Model):
@@ -109,7 +127,7 @@ class Post(models.Model):
     post_type = models.CharField(max_length=10, choices=POST_TYPE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     topic = models.ManyToManyField(Topic, null=True, blank=True)
-    public = models.BooleanField()
+    public = models.BooleanField(default=True)
     like = models.IntegerField(default=0)
     unlike = models.IntegerField(default=0)
     share = models.IntegerField(default=0)
@@ -166,7 +184,7 @@ class Comment(models.Model):
 
 
 def post_image_upload(instance, filename):
-    # new_filename = random.randint(1, 3910209312)
+    # new_filename = random.randint(1111111111, 9999999999)
     new_filename = uuid.uuid4()
     name, ext = get_filename_ext(filename)
     img_name = '{new_filename}{ext}'.format(new_filename=new_filename, ext=ext)

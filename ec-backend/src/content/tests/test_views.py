@@ -49,7 +49,7 @@ class PostViewTestCase(APITestCase):
         # self.client.credentials(
         #     HTTP_AUTHORIZATION='Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTc2NTUzODI4LCJqdGkiOiIyMjM2ZjQ0MzU3MTA0YTVkODBkZGZhMTYyZjNhZGRkZiIsInVzZXJfaWQiOjN9.qf6WF-8iOYaDQ7pbS_LfJVEy4ZH67FAih0wxnGiLahY')
         # response = self.client.get(settings.BASE_URL + api_reverse('content:category-list'), headers={'Authorization': TOKEN})
-        response = self.client.get('/content/category/')
+        response = self.client.get('/content/post/')
         # response = self.client.get(settings.BASE_URL)
         # print(settings.BASE_URL + api_reverse('content:category-list'))
         # print(response.status_code)

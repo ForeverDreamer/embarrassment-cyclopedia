@@ -3,9 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import filters
 
-from .models import Category, Topic, Post, POST_TYPE
-from ec.permissions import IsBindPhone, IsOwnerOrReadOnly
+from .models import Category, Topic, Post, POST_TYPE, CATEGORY_CHOICES
+from ec.permissions import IsBindPhone, IsOwnerOrReadOnly, IsSuperUser
 from .serializers import (
     CategoryListSerializer,
     CategoryDetailSerializer,
@@ -17,6 +18,23 @@ from .serializers import (
     PostImageSerializer,
     PostVideoSerializer,
 )
+
+
+# 构造测试数据
+class DummyDataAPIView(APIView):
+    permission_classes = [IsSuperUser]
+
+    def post(self, *args, **kwargs):
+        # for slug, title in CATEGORY_CHOICES:
+        #     # 构造分类数据
+        #     category = Category.objects.create(slug=slug, title=title)
+        #     # 构造话题数据
+        #     Topic.objects.create(title=title + '话题1', title_pic='www.baidu.com', desc=title + '话题描述1',
+        #                          category=category)
+        #     Topic.objects.create(title=title + '话题2', title_pic='www.baidu.com', desc=title + '话题描述2',
+        #                          category=category)
+
+        return Response({"msg": "测试数据构造成功！"}, status=status.HTTP_200_OK)
 
 
 class CategoryListView(generics.ListAPIView):
@@ -38,11 +56,13 @@ class TopicListView(generics.ListAPIView):
     # permission_classes = [permissions.AllowAny]
     queryset = Topic.objects.all()
     serializer_class = TopicListSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['category__slug']
 
-    def get_queryset(self):
-        category = self.request.query_params.get('q')
-        qs = Topic.objects.by_category(category)
-        return qs
+    # def get_queryset(self):
+    #     category = self.request.query_params.get('q')
+    #     qs = Topic.objects.by_category(category)
+    #     return qs
 
 
 class TopicDetailView(generics.RetrieveAPIView):
@@ -52,9 +72,29 @@ class TopicDetailView(generics.RetrieveAPIView):
     # lookup_field = 'slug'
 
 
+# 查询所有用户公开的文章
 class PostListView(generics.ListAPIView):
-    queryset = Post.objects.all()
+    # queryset = Post.objects.all()
     serializer_class = PostListSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['category__slug', 'user__profile__nickname']
+
+    def get_queryset(self):
+        topic = self.request.query_params.get('topic')
+        qs = Post.objects.by_topic(topic)
+        return qs
+
+
+# 用户查询自己发布的文章
+class PostUserListView(generics.ListAPIView):
+    # queryset = Post.objects.all()
+    serializer_class = PostListSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['category__slug']
+
+    def get_queryset(self):
+        qs = Post.objects.by_user(self.request.user)
+        return qs
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -72,7 +112,9 @@ class PostCreateView(generics.CreateAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         post = serializer.save(user=self.request.user)
-        share_post = serializer.validated_data.get('share_post')
+        data = serializer.validated_data
+        share_post = data.get('share_post')
+        # if share_post and data.get('post_type') == POST_TYPE[2][0]:
         if share_post:
             post.active = True
             post.save()

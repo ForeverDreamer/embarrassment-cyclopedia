@@ -72,6 +72,19 @@ class TopicDetailSerializer(serializers.HyperlinkedModelSerializer):
         return obj.title
 
 
+class TopicPostSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Topic
+        fields = [
+            'title',
+        ]
+
+    def get_title(self, obj):
+        return obj.title
+
+
 class PostImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PostImage
@@ -88,6 +101,7 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
     nickname = serializers.CharField(source='user.profile.nickname', read_only=True)
     title = serializers.SerializerMethodField()
     category = serializers.CharField(source='category.title', read_only=True)
+    topic = TopicPostSerializer(many=True)
     # postimage_set = PostImageSerializer(many=True, read_only=True)
     # postvideo_set = PostVideoSerializer(many=True, read_only=True)
 
@@ -101,6 +115,7 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
             'location',
             'post_type',
             'category',
+            'topic',
             'like',
             'unlike',
             'share',
@@ -145,6 +160,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
+    topic = serializers.ListField(child=serializers.IntegerField())
+
     class Meta:
         model = Post
         fields = [
@@ -162,6 +179,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data['post_type'] == POST_TYPE[2][0] and len(data['share_post']) == 0:
             raise serializers.ValidationError("分享文章id缺失")
+        data['share_post'] = []
         return data
 
     # def validate_category(self, category):
