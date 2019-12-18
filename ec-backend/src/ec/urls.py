@@ -28,12 +28,12 @@ from rest_framework_simplejwt.views import (
 from account import views
 
 # Create a router and register our viewsets with it.
-router = DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'profiles', views.ProfileViewSet)
+# router = DefaultRouter()
+# router.register(r'users', views.UserViewSet)
+# router.register(r'profiles', views.ProfileViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
@@ -42,6 +42,7 @@ urlpatterns = [
     path('account/', include(('account.urls', 'account'), namespace='account')),
     path('content/', include(('content.urls', 'content'), namespace='content')),
     path('ad/', include(('ad.urls', 'ad'), namespace='ad')),
+    path('interaction/', include(('interaction.urls', 'interaction'), namespace='interaction')),
     # re_path(r'^api/auth/$', include('rest_framework.urls', namespace='rest_framework')),
 ]
 

@@ -31,7 +31,7 @@ class CategoryManager(models.Manager):
         return CategoryQuerySet(self.model, using=self._db)
 
     def all(self):
-        return self.get_queryset().all().active()
+        return self.get_queryset().active()
 
 
 class Category(models.Model):
@@ -118,7 +118,7 @@ class PostManager(models.Manager):
 
 
 class Post(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     # title = models.CharField(max_length=120)
     desc = models.TextField()
     title_pic = models.CharField(max_length=120, null=True, blank=True)
@@ -153,34 +153,6 @@ class Post(models.Model):
     # @property
     # def title_pic(self):
     #     return self.postimage_set[0]
-
-
-class CommentQuerySet(models.query.QuerySet):
-    def active(self):
-        return self.filter(active=True)
-
-
-class CommentManager(models.Manager):
-    def get_queryset(self):
-        return CommentQuerySet(self.model, using=self._db)
-
-    def all(self):
-        return self.get_queryset().all().active()
-
-
-class Comment(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
-    text = models.TextField()
-    active = models.BooleanField(default=True)
-    updated = models.DateTimeField(auto_now=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    objects = CommentManager()
-
-    def __str__(self):
-        return self.text[:10]
 
 
 def post_image_upload(instance, filename):

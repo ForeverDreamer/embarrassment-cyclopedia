@@ -8,6 +8,7 @@ from .views import (
     ThirdLoginAPIView,
     ThirdBindPhoneAPIView,
     LogoutAPIView,
+    ProfileUpdateAPIView,
 )
 
 urlpatterns = [
@@ -17,5 +18,6 @@ urlpatterns = [
     path('passwdlogin/', AccountLoginAPIView.as_view(), name='passwd_login'),
     path('thirdlogin/', ThirdLoginAPIView.as_view(), name='third_login'),
     path('thirdbindphone/', ThirdBindPhoneAPIView.as_view(), name='third_bind_phone'),
+    path('profileupdate/', ProfileUpdateAPIView.as_view(), name='profileupdate'),
     path('logout/', LogoutAPIView.as_view(), name='logout'),
 ]

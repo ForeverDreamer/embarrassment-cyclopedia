@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Category, Topic, Post, PostImage, PostVideo, POST_TYPE
+from interaction.serializers import CommentSerializer
 from .validators import validate_file_type
 
 
@@ -108,6 +109,7 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Post
         fields = [
+            'id',
             'url',
             'nickname',
             'title',
@@ -141,6 +143,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     title = serializers.SerializerMethodField()
     postimage_set = PostImageSerializer(many=True, read_only=True)
     postvideo_set = PostVideoSerializer(many=True, read_only=True)
+    comment_set = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
@@ -151,8 +154,12 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'post_type',
             'share_post',
             'category',
+            'like',
+            'unlike',
+            'share',
             'postimage_set',
             'postvideo_set',
+            'comment_set',
         ]
 
     def get_title(self, obj):
@@ -161,6 +168,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 class PostCreateSerializer(serializers.ModelSerializer):
     topic = serializers.ListField(child=serializers.IntegerField())
+    image_list = serializers.ListField(child=serializers.ImageField(), required=True)
+    video_list = serializers.ListField(child=serializers.FileField(validators=[validate_file_type]), required=True)
 
     class Meta:
         model = Post
@@ -173,6 +182,8 @@ class PostCreateSerializer(serializers.ModelSerializer):
             'post_type',
             'share_post',
             'public',
+            'image_list',
+            'video_list',
         ]
         # read_only_fields = ['id']
 

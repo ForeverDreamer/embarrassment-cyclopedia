@@ -12,7 +12,7 @@ from ec.utils import get_filename_ext
 User = settings.AUTH_USER_MODEL
 
 GENDER_STATUS = (
-    ('male ', '男'),
+    ('male', '男'),
     ('female', '女'),
     ('secret', '保密'),
 )
@@ -40,7 +40,8 @@ THIRD_PARTY_TYPE = (
 
 
 class ProfileQuerySet(models.query.QuerySet):
-    pass
+    def active(self):
+        return self.filter(owner__is_active=True)
 
 
 class ProfileManager(models.Manager):
@@ -48,8 +49,7 @@ class ProfileManager(models.Manager):
         return ProfileQuerySet(self.model, using=self._db)
 
     def all(self):
-        return self.get_queryset().all()
-        # return super(CourseManager, self).all()
+        return self.get_queryset().active()
 
 
 def user_pic_upload(instance, filename):
@@ -58,7 +58,7 @@ def user_pic_upload(instance, filename):
     image_name = '{new_filename}{ext}'.format(new_filename=new_filename, ext=ext)
     return "image/account/{username}/{image_name}".format(
         username=instance.owner.username,
-        final_filename=image_name
+        image_name=image_name
     )
 
 
@@ -68,7 +68,7 @@ def user_pic_upload(instance, filename):
 
 
 class Profile(models.Model):
-    owner = models.OneToOneField('auth.User', related_name='profile', on_delete=models.CASCADE)
+    owner = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     nickname = models.CharField(max_length=50, unique=True)
     image_height = models.IntegerField(blank=True, null=True)
     image_width = models.IntegerField(blank=True, null=True)
@@ -77,8 +77,6 @@ class Profile(models.Model):
     # validators必须要配合ModelForm使用，后台手动操作就是通过ModelForm
     # .create()或.save()不生效：'https://stackoverflow.com/questions/40881708/django-model-validator-not-working-on-create'
     mobile_phone = models.CharField(max_length=50, validators=[validate_mobile_phone], blank=True, null=True)
-    cteate_time = models.DateTimeField(auto_now_add=True)
-    update_time = models.DateTimeField(auto_now=True)
     # status = models.BooleanField(default=True)
     gender = models.CharField(max_length=50, choices=GENDER_STATUS, default='secret')
     age = models.IntegerField(blank=True, null=True)
@@ -87,6 +85,8 @@ class Profile(models.Model):
     birthday = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     hometown = models.CharField(max_length=50, blank=True, null=True)
     logout = models.BooleanField(default=False)  # 用户手动退出登录
+    cteate_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
 
     objects = ProfileManager()
 

@@ -3,6 +3,7 @@ import requests
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -22,7 +23,7 @@ from .serializers import (
 from .models import Profile, ThirdLoginInfo
 from .utils import is_phone, get_tokens_for_user
 from ec import config
-from ec.permissions import IsBindPhone
+from ec.permissions import IsBindPhone, IsOwnerOrReadOnly
 from . import error_code
 
 
@@ -282,72 +283,23 @@ class CodeRegOrLoginAPIView(generics.CreateAPIView):
                             status=status.HTTP_201_CREATED)
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list` and `detail` actions.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class ProfileViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-
-    Additionally we also provide an extra `highlight` action.
-    """
+class ProfileUpdateAPIView(generics.UpdateAPIView):
     queryset = Profile.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsBindPhone, IsOwnerOrReadOnly]
     serializer_class = ProfileSerializer
-    #
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
+    # For partial update - PATCH http method
+    # For full update - PUT http method
 
-# 验证码注册或登录
-# class CodeRegOrLoginAPIView(APIView):
-#     permission_classes = [permissions.AllowAny]
-#
-#     def post(self, *args, **kwargs):
-#         data = self.request.data
-#         print('data', data)
-#         mobile_phone = data.get('mobile_phone')
-#         # 验证手机号码合法性
-#         if not is_phone(mobile_phone):
-#             return Response({"msg": "验证码注册或登录， 请输入正确的电话号码！", 'error_code': '9997'}, status=status.HTTP_400_BAD_REQUEST)
-#         # 缓存检查验证码是否一致
-#         print('cache: [{}]-> {}'.format(mobile_phone, cache.get(mobile_phone)))
-#         if cache.get(mobile_phone) != data.get('veri_code'):
-#             return Response({"msg": "验证码错误", 'error_code': '9999'}, status=status.HTTP_400_BAD_REQUEST)
-#         # gender = data.get('gender')
-#         # age = data.get('age')
-#         # emotion = data.get('emotion')
-#         # birthday = data.get('birthday')
-#         # hometown = data.get('hometown')
-#         qs = Profile.objects.all().filter(mobile_phone=mobile_phone)
-#         if qs.exists():
-#             # 用户登录
-#             # return Response({"msg": "用户已存在", 'error_code': '10001'}, status=status.HTTP_400_BAD_REQUEST)
-#             return Response({"msg": "手机验证码登录成功", 'error_code': '10002'}, status=status.HTTP_200_OK)
-#         else:
-#             # 创建并关联用户
-#             profile = Profile.objects.create(mobile_phone=mobile_phone)
-#             user = User.objects.create_user(username='user_' + mobile_phone)
-#             # profile[0].owner = user
-#             profile.owner = user
-#             profile.save()
-#             # user = User(username='user_' + mobile_phone)
-#             # profile = Profile(mobile_phone=mobile_phone, owner=user)
-#             # try:
-#             #     profile.full_clean()
-#             # except ValidationError as e:
-#             #     print(e)
-#             #     # Do something when validation is not passing
-#             #     return Response({"msg": "数据库写入错误，请输入正确的电话号码！", 'error_code': '9997'},
-#             #                     status=status.HTTP_400_BAD_REQUEST)
-#             # else:
-#             #     # Validation is ok we will save the instance
-#             #     profile.save()
-#             #     user.save()
-#
-#             return Response({"msg": "手机验证码注册成功", 'error_code': '10001'}, status=status.HTTP_200_OK)
+    def get_object(self):
+        qs = self.get_queryset()
+        user = self.request.user
+
+        obj = get_object_or_404(qs, owner=user)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def perform_update(self, serializer):
+        serializer.save()
+        # serializer.data.update(dict({'msg': '资料更新成功', 'data': dict(serializer.data)}))
+        # serializer.data['item'] = 'test'

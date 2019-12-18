@@ -26,7 +26,6 @@ class ThirdBindPhoneSerializer(serializers.Serializer):
 
 
 class ThirdLoginSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ThirdLoginInfo
         fields = ['third_type', 'openid', 'nickname', 'third_user_pic']
@@ -127,42 +126,26 @@ class AccountLoginSerializer(serializers.Serializer):
         return password
 
 
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    # owner = serializers.ReadOnlyField(source='owner.username')
+class ProfileSerializer(serializers.ModelSerializer):
+    # msg = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['id', 'url', 'owner', 'mobile_phone', 'gender', 'age', 'emotion', 'career', 'birthday', 'hometown']
+        fields = ['nickname', 'user_pic', 'gender', 'age', 'emotion', 'career', 'birthday', 'hometown', 'msg']
+        # extra_kwargs = {
+        #     'nickname': {'required': True},
+        #     'user_pic': {'required': True},
+        #     'gender': {'required': True},
+        #     'age': {'required': True},
+        #     'emotion': {'required': True},
+        #     'career': {'required': True},
+        #     'birthday': {'required': True},
+        #     'hometown': {'required': True},
+        # }
+        # read_only_fields = ['owner']
 
-
-# class CodeRegOrLoginSerializer(serializers.ModelSerializer):
-#     mobile_phone = serializers.CharField()
-#     # veri_code = serializers.CharField()  # 该字段不属于Profile，不能够在这里验证
-#
-#     class Meta:
-#         model = Profile
-#         fields = ['mobile_phone']
-#         # fields = ['mobile_phone', 'veri_code']
-#
-#     def validate_mobile_phone(self, mobile_phone):
-#         if not is_phone(mobile_phone):
-#             raise ValidationError('validate_mobile_phone: 请输入正确的电话号码！')
-#         return mobile_phone
-#
-#     # def validate_veri_code(self, veri_code):
-#     #     if not is_veri_code(veri_code):
-#     #         raise ValidationError('validate_veri_code: 验证码格式错误！')
-#     #     return veri_code
-#
-#     def create(self, validated_data):
-#         # 创建用户信息
-#         mobile_phone = validated_data.get('mobile_phone')
-#         profile = Profile.objects.create(mobile_phone=mobile_phone)
-#         # 创建用户
-#         user = User.objects.create_user('user_' + mobile_phone)
-#         profile.owner = user
-#         profile.save()
-#         return profile
+    # def get_msg(self, obj):
+    #     return '更新成功'
 
 
 class UserCreateSerializer(serializers.ModelSerializer):

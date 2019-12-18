@@ -106,8 +106,8 @@ class PostUserListView(generics.ListAPIView):
         return qs
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+class PostDetailView(generics.RetrieveAPIView):
+    # permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
 

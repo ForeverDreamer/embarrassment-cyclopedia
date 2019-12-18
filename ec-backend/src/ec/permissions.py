@@ -23,7 +23,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Instance must have an attribute named `owner`.
-        return obj.user == request.user
+        return obj.owner == request.user
 
 
 class IsSuperUser(permissions.BasePermission):

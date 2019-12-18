@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'content',
     'ad',
+    'interaction',
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'content.pagination.ProductPagination',
     'SEARCH_PARAM': 'q',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
