@@ -43,6 +43,7 @@ urlpatterns = [
     path('content/', include(('content.urls', 'content'), namespace='content')),
     path('ad/', include(('ad.urls', 'ad'), namespace='ad')),
     path('interaction/', include(('interaction.urls', 'interaction'), namespace='interaction')),
+    path('chat/', include(('chat.urls', 'chat'), namespace='chat')),
     # re_path(r'^api/auth/$', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
