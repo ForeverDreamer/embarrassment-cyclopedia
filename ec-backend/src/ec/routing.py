@@ -1,13 +1,12 @@
-# mysite/routing.py
-from channels.auth import AuthMiddlewareStack
+from .channelsmiddleware import TokenAuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 import chat.routing
 
-application = ProtocolTypeRouter({
-    # (http->django views is added by default)
-    'websocket': AuthMiddlewareStack(
-        URLRouter(
-            chat.routing.websocket_urlpatterns
+application = ProtocolTypeRouter(
+    {
+        # (http->django views is added by default)
+        "websocket": TokenAuthMiddlewareStack(
+            URLRouter(chat.routing.websocket_urlpatterns)
         )
-    ),
-})
+    }
+)
