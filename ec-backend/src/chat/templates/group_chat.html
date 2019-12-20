@@ -11,11 +11,11 @@
     <input id="chat-message-submit" type="button" value="Send"/>
 </body>
 <script>
-    var roomName = {{ room_name_json }};
+    var group_name = {{ group_name_json }};
     token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTc2ODM5NDA5LCJqdGkiOiJhNDRmYTlhNWMyMzQ0YzRiOGNmMDBiYjkxZGE2MDA4NyIsInVzZXJfaWQiOjJ9.CAc4HRA92Rip_Uaxng0rUQ96dN1Wr3zPRybpUKbP8RY';
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
-        '/ws/chat/' + roomName + '/' + "?token=" + token);
+        '/ws/chat/' + group_name + '/' + "?token=" + token);
 
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);

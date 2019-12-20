@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import PrivateChat, PrivateChatMsg, GroupChat, GroupChatMsg
+from .models import PrivateChat, PrivateChatMsg, GroupChat, GroupChatMsg, ChannelName
 
 
 class PrivateChatMsgAdmin(admin.TabularInline):
@@ -29,3 +29,5 @@ class GroupChatAdmin(admin.ModelAdmin):
 
 
 admin.site.register(GroupChat, GroupChatAdmin)
+
+admin.site.register(ChannelName)
