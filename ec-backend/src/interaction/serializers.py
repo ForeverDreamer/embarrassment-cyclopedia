@@ -1,6 +1,22 @@
 from rest_framework import serializers
 
-from .models import LikeInfo, Comment
+from .models import LikeInfo, Comment, BlockUser
+
+
+class BlockUserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlockUser
+        fields = [
+            'blocked',
+        ]
+
+
+class BlockUserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlockUser
+        fields = [
+            'blocked',
+        ]
 
 
 class LikeDetailSerializer(serializers.ModelSerializer):

@@ -19,12 +19,33 @@ from .serializers import (
     AccountLoginSerializer,
     ThirdLoginSerializer,
     ThirdBindPhoneSerializer,
+    ChangePasswordSerializer,
 )
 from .models import Profile, ThirdLoginInfo
 from .utils import is_phone, get_tokens_for_user
 from ec import config
 from ec.permissions import IsBindPhone, IsOwnerOrReadOnly
 from . import error_code
+
+
+# 通过手机验证码修改密码
+class ChangePasswordAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsBindPhone]
+
+    def post(self, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=self.request.data)
+        if not serializer.is_valid(raise_exception=False):
+            # print(serializer.errors)
+            return Response({'error_code': '3000', "msg": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        user = self.request.user
+        data = serializer.validated_data
+        mobile_phone = user.username
+        # 缓存检查验证码是否一致
+        if cache.get(mobile_phone) != data.get('veri_code'):
+            return Response({"msg": "验证码错误", 'error_code': '9999'}, status=status.HTTP_400_BAD_REQUEST)
+        user.set_password(data.get('password'))
+        user.save()
+        return Response({'error_code': '10002', "msg": "密码重置成功"}, status=status.HTTP_200_OK)
 
 
 # 退出登录
@@ -202,6 +223,8 @@ class AccountLoginAPIView(APIView):
                 return Response({"msg": "用户被禁用!"}, status=status.HTTP_403_FORBIDDEN)
             # 比对密码，用户登录操作
             password = data.get('password')
+            if password == config.DEFALT_PASSWORD:
+                return Response({"msg": "用户名或密码错误", 'error_code': '10001'}, status=status.HTTP_400_BAD_REQUEST)
             if not user.check_password(password):
                 return Response({"msg": "用户名或密码错误", 'error_code': '10002'}, status=status.HTTP_400_BAD_REQUEST)
             # 创建token返回给客户端
@@ -233,7 +256,7 @@ class SendCodeAPIView(APIView):
             return Response(error_code.VERI_CODE.get('too_often'), status=status.HTTP_400_BAD_REQUEST)
         # 调用短信服务商接口发送验证码给用户
         # print('data: ', data)
-        cache.set(mobile_phone, '1314', 300)
+        cache.set(mobile_phone, '131452', 300)
 
         return Response(error_code.VERI_CODE.get('success'), status=status.HTTP_200_OK)
 
@@ -252,7 +275,7 @@ class CodeRegOrLoginAPIView(generics.CreateAPIView):
         if not serializer.is_valid():
             # print(serializer.errors)
             return Response({"msg": "手机号或验证码格式错误!"}, status=status.HTTP_400_BAD_REQUEST)
-        data = self.request.data
+        data = serializer.validated_data
         # print('data', data)
         mobile_phone = data.get('mobile_phone')
         # 缓存检查验证码是否一致
@@ -303,3 +326,9 @@ class ProfileUpdateAPIView(generics.UpdateAPIView):
         serializer.save()
         # serializer.data.update(dict({'msg': '资料更新成功', 'data': dict(serializer.data)}))
         # serializer.data['item'] = 'test'
+
+
+class UserListAPIView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

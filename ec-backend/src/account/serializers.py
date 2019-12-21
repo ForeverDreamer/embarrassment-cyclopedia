@@ -9,6 +9,21 @@ from .utils import is_phone, is_veri_code, validate_password, validate_openid
 from ec import config
 
 
+class ChangePasswordSerializer(serializers.Serializer):
+    veri_code = serializers.CharField(min_length=6, max_length=6)
+    password = serializers.CharField(min_length=8, max_length=16)
+
+    def validate_veri_code(self, veri_code):
+        if not is_veri_code(veri_code):
+            raise serializers.ValidationError('验证码格式错误！')
+        return veri_code
+
+    def validate_password(self, password):
+        if not validate_password(password):
+            raise serializers.ValidationError('密码格式错误！')
+        return password
+
+
 class ThirdBindPhoneSerializer(serializers.Serializer):
     openid = serializers.CharField(max_length=100)
     mobile_phone = serializers.CharField(max_length=50)
@@ -131,7 +146,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['nickname', 'user_pic', 'gender', 'age', 'emotion', 'career', 'birthday', 'hometown', 'msg']
+        fields = ['nickname', 'user_pic', 'gender', 'age', 'emotion', 'career', 'birthday', 'hometown']
         # extra_kwargs = {
         #     'nickname': {'required': True},
         #     'user_pic': {'required': True},
@@ -154,13 +169,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ['username']
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     # profile_url = serializers.HyperlinkedRelatedField(view_name='profile-detail', read_only=True)
     profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'url', 'username', 'email', 'profile']
+        fields = ['id', 'username', 'email', 'profile']
         # fields = ['id', 'url', 'username', 'email', 'password', 'profile', 'profile_url']
         # extra_kwargs = {'password': {'write_only': True}}
 

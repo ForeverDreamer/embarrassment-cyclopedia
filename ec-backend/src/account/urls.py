@@ -9,9 +9,12 @@ from .views import (
     ThirdBindPhoneAPIView,
     LogoutAPIView,
     ProfileUpdateAPIView,
+    ChangePasswordAPIView,
+    UserListAPIView,
 )
 
 urlpatterns = [
+    path('userlist/', UserListAPIView.as_view(), name='userlist'),
     path('sendcode/', SendCodeAPIView.as_view(), name='sendcode'),
     path('coderegorlogin/', CodeRegOrLoginAPIView.as_view(), name='code_regorlogin'),
     path('emailreg/', EmailRegAPIView.as_view(), name='email_reg'),
@@ -20,4 +23,5 @@ urlpatterns = [
     path('thirdbindphone/', ThirdBindPhoneAPIView.as_view(), name='third_bind_phone'),
     path('profileupdate/', ProfileUpdateAPIView.as_view(), name='profileupdate'),
     path('logout/', LogoutAPIView.as_view(), name='logout'),
+    path('changepassword/', ChangePasswordAPIView.as_view(), name='changepassword'),
 ]

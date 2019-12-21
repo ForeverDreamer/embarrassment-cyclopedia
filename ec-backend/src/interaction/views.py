@@ -1,10 +1,15 @@
-from rest_framework import generics, permissions, status
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+
+from rest_framework import generics, mixins, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from ec.permissions import IsBindPhone
-from .serializers import LikeDetailSerializer, CommentSerializer
-from .models import LikeInfo, LIKE_STATUS, Post
+from ec.permissions import IsBindPhone, IsOwnerOrReadOnly
+from .serializers import LikeDetailSerializer, CommentSerializer, BlockUserDetailSerializer
+from .models import LikeInfo, LIKE_STATUS, BlockUser
+
+User = get_user_model()
 
 
 class LikeAPIView(APIView):
@@ -64,3 +69,45 @@ class CommentAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+# 加入/解除黑名单
+class BlockUserAPIView(generics.CreateAPIView, mixins.DestroyModelMixin):
+    queryset = BlockUser.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsBindPhone, IsOwnerOrReadOnly]
+    serializer_class = BlockUserDetailSerializer
+
+    def get_object(self):
+        serializer = self.get_serializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        blocked = data.get('blocked')
+        qs = self.get_queryset()
+        qs = qs.filter(blocked=blocked)
+        if not qs.exists():
+            return None
+        obj = qs.first()
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        blocked = serializer.validated_data.get('blocked')
+        if blocked == self.request.user:
+            return Response({'error_code': '10001', "msg": "不能拉黑自己！"}, status=status.HTTP_400_BAD_REQUEST)
+        qs = BlockUser.objects.filter(blocked=blocked)
+        if qs.exists():
+            return Response({'error_code': '10001', "msg": "您已拉黑过该用户！"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save(owner=self.request.user)
+        return Response({'error_code': '10001', "msg": "拉黑操作成功！"}, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance:
+            return Response({'error_code': '10001', "msg": "您未拉黑该用户！"}, status=status.HTTP_400_BAD_REQUEST)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
