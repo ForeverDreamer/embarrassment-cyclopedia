@@ -1,13 +1,26 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
 
-from .models import LikeInfo, Comment, BlockUser
+from .models import LikeInfo, Comment, BlockUser, FollowUser
+
+User = get_user_model()
 
 
-class BlockUserListSerializer(serializers.ModelSerializer):
+class FollowListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BlockUser
+        model = User
         fields = [
-            'blocked',
+            'id',
+            'username'
+        ]
+
+
+class FollowUserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowUser
+        fields = [
+            'followed',
         ]
 
 
