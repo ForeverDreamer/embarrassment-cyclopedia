@@ -8,6 +8,8 @@ from .views import (
     FriendListAPIView,
     FansListAPIView,
     FollowListAPIView,
+    FeedBackAPIView,
+    CheckUpdateAPIView,
     )
 
 urlpatterns = [
@@ -18,4 +20,6 @@ urlpatterns = [
     path('friends/', FriendListAPIView.as_view(), name='friends'),
     path('fans/', FansListAPIView.as_view(), name='fans'),
     path('follows/', FollowListAPIView.as_view(), name='follows'),
+    path('feedback/', FeedBackAPIView.as_view(), name='feedback'),
+    path('checkupdate/', CheckUpdateAPIView.as_view(), name='checkupdate'),
 ]

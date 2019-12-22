@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from .models import LikeInfo, Comment, BlockUser, FollowUser
+from .models import LikeInfo, Comment, BlockUser, FollowUser, Feedback, AppUpdate
 
 User = get_user_model()
 
@@ -58,4 +58,21 @@ class CommentSerializer(serializers.ModelSerializer):
             'post',
             'parent',
             'text',
+        ]
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = [
+            'question'
+        ]
+
+
+class AppUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppUpdate
+        fields = [
+            'url',
+            'version'
         ]

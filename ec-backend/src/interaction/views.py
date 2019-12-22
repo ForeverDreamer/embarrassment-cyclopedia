@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, mixins, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import filters
 
 from ec.permissions import IsBindPhone, IsOwnerOrReadOnly
 from .serializers import (
@@ -12,8 +13,10 @@ from .serializers import (
     BlockUserDetailSerializer,
     FollowUserDetailSerializer,
     FollowListSerializer,
+    FeedbackSerializer,
+    AppUpdateSerializer,
 )
-from .models import LikeInfo, LIKE_STATUS, BlockUser, FollowUser
+from .models import LikeInfo, LIKE_STATUS, BlockUser, FollowUser, Feedback, AppUpdate
 
 User = get_user_model()
 
@@ -186,3 +189,35 @@ class FollowListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return FollowUser.objects.follows(self.request.user)
+
+
+# 用户反馈
+class FeedBackAPIView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsBindPhone]
+    serializer_class = FeedbackSerializer
+
+    def get_queryset(self):
+        return Feedback.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user, customer_service=User.objects.get(id=1))
+
+
+# 检查App版本
+class CheckUpdateAPIView(generics.RetrieveAPIView):
+    queryset = AppUpdate.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsBindPhone]
+    serializer_class = AppUpdateSerializer
+    # filter_backends = [filters.OrderingFilter]
+    # ordering_fields = ["create_time"]
+
+    def get_object(self):
+        qs = self.get_queryset().order_by('-create_time')
+        if qs.exists():
+            return qs.first()
+        return None
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data)

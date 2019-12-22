@@ -132,3 +132,51 @@ class FollowUser(models.Model):
 
     def __str__(self):
         return '{owner}关注{blocked}'.format(owner=self.owner.username, blocked=self.followed.username)
+
+
+# 用户反馈
+class Feedback(models.Model):
+    # 客服人员
+    customer_service = models.ForeignKey(User, related_name='answer_set', on_delete=models.CASCADE)
+    # 反馈客户
+    owner = models.ForeignKey(User, related_name='ask_set', on_delete=models.CASCADE)
+    question = models.TextField()
+    solved = models.BooleanField(default=False)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'FeedBack'
+        verbose_name_plural = 'FeedBacks'
+
+    def __str__(self):
+        return self.question[:10]
+
+
+class AppUpdateQuerySet(models.query.QuerySet):
+    def online(self):
+        return self.filter(online=True)
+
+
+class AppUpdateManager(models.Manager):
+    def get_queryset(self):
+        return AppUpdateQuerySet(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset().online()
+
+
+# App更新
+class AppUpdate(models.Model):
+    url = models.CharField(max_length=100)
+    version = models.CharField(max_length=20)
+    online = models.BooleanField(default=False)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    objects = AppUpdateManager()
+
+    class Meta:
+        verbose_name = 'AppUpdate'
+        verbose_name_plural = 'AppUpdates'
+
+    def __str__(self):
+        return self.version
