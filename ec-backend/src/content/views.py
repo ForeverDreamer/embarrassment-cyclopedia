@@ -120,7 +120,7 @@ class PostCreateView(generics.CreateAPIView):
         serializer = self.get_serializer(data=self.request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        post = serializer.save(user=self.request.user)
+        post = serializer.save(owner=self.request.user)
         data = serializer.validated_data
         share_post = data.get('share_post')
         # if share_post and data.get('post_type') == POST_TYPE[2][0]:

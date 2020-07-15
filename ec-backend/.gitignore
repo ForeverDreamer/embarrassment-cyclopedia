@@ -12,3 +12,5 @@ static_in_env/
 # data
 *.json
 *.jl
+src/mm/*.txt
+db.sqlite3

@@ -167,14 +167,14 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
-    topic = serializers.ListField(child=serializers.IntegerField())
-    image_list = serializers.ListField(child=serializers.ImageField(), required=True)
-    video_list = serializers.ListField(child=serializers.FileField(validators=[validate_file_type]), required=True)
+    topic = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    image_list = serializers.ListField(child=serializers.ImageField(), required=False)
+    video_list = serializers.ListField(child=serializers.FileField(validators=[validate_file_type]), required=False)
 
     class Meta:
         model = Post
         fields = [
-            # 'id',
+            # 'owner',
             'desc',
             'location',
             'category',
